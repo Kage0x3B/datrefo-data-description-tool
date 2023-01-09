@@ -3,7 +3,11 @@ const config = {
     theme: {
         extend: {}
     },
-    plugins: [require('@tailwindcss/typography'), require('daisyui')]
+    plugins: [require('@tailwindcss/typography'), require('daisyui')],
+    daisyui: {
+        themes: ['emerald', 'business'],
+        darkTheme: 'business'
+    }
 };
 
 module.exports = config;
