@@ -16,10 +16,7 @@
     const activeTabId = writable();
     setContext('tabs', {
         activeTabId,
-        setActiveTab: (tabId) => {
-            activeTabId.set(tabId);
-            dispatch('tab', tabId);
-        },
+        setActiveTab,
         tabStyle: {
             bordered,
             lifted,
@@ -27,6 +24,11 @@
             size
         }
     });
+
+    export function setActiveTab(tabId: string) {
+        activeTabId.set(tabId);
+        dispatch('tab', tabId);
+    }
 
     $: classes = classnames(className, {
         'tabs-boxed': boxed

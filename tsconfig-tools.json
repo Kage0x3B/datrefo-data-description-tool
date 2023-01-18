@@ -1,0 +1,19 @@
+{
+    "extends": "@tsconfig/node16/tsconfig.json",
+    "ts-node": {
+        "transpileOnly": true,
+        "files": true
+    },
+    "compilerOptions": {
+        "target": "ESNext",
+        "lib": ["ESNext"],
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "types": ["node"],
+        "noEmit": true
+    },
+    "include": ["./tools/**/*"]
+}
