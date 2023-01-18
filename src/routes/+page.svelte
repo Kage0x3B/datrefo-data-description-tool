@@ -1,10 +1,11 @@
-<script>
+<script lang="ts">
     import TabContainer from '$lib/daisyUiComponents/TabContainer.svelte';
     import Tab from '$lib/daisyUiComponents/Tab.svelte';
     import Input from '$lib/daisyUiComponents/Input.svelte';
     import Button from '$lib/daisyUiComponents/Button.svelte';
 
-    const documents = [];
+    let tabs = [];
+    export function closeTab(tabId) {}
 </script>
 
 <TabContainer boxed>
