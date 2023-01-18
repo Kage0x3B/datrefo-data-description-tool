@@ -79,7 +79,7 @@ async function generateResourceTypeMetadata() {
 }
 
 export async function generateFhirMetadata() {
-    // await generateResourceTypeEnum();
+    await generateResourceTypeEnum();
     await generateResourceTypeMetadata();
 }
 
