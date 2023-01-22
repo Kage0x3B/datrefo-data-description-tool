@@ -2,11 +2,13 @@
     import Input from '$lib/daisyUiComponents/Input.svelte';
     import Tab from '$lib/daisyUiComponents/Tab.svelte';
     import Button from '$lib/daisyUiComponents/Button.svelte';
-    import type { DaTreFoEditor, EditorDocumentTabData } from '$lib/types/component/DaTreFoEditor';
+    import type { DaTreFoEditorContext, EditorDocumentTabData } from '$lib/types/component/DaTreFoEditor';
     import { documents } from '$lib/projectData.js';
     import type { InternalDocument } from '$lib/types/InternalDocument';
+    import { getContext } from 'svelte';
+    import { EDITOR_CONTEXT } from '$lib/util/ContextKey';
 
-    export let editor: DaTreFoEditor;
+    const editor: DaTreFoEditorContext = getContext(EDITOR_CONTEXT);
     export let tabData: EditorDocumentTabData;
 
     let document: InternalDocument;
@@ -16,12 +18,12 @@
 <Tab tabId={tabData.id}>
     <div slot="header">
         {document.displayName ?? document.resourceType} [{document.id}]
-        <Button btnStyle="ghost" size="xs">x</Button>
+        <Button btnStyle="ghost" size="xs" on:click={() => editor.closeTab(tabData.id)}>x</Button>
     </div>
     <h1>{document.resourceType} Dokument</h1>
-    <Input type="checkbox" color="primary" />
-    <Button color="accent" href="/test">Test</Button>
-    <Input type="select">
+    <Input type="checkbox" color="primary" inputSize="sm" />
+    <Button color="accent" href="/test" size="sm">Test</Button>
+    <Input type="select" inputSize="sm" inputStyle="bordered">
         {#each [1, 2, 3, 4, 5] as i}
             <option>Option {i}</option>
         {/each}

@@ -5,8 +5,8 @@ const config = {
     },
     plugins: [require('@tailwindcss/typography'), require('daisyui')],
     daisyui: {
-        themes: ['emerald', 'business'],
-        darkTheme: 'business'
+        themes: ['emerald' /*, 'business'*/]
+        // darkTheme: 'business'
     }
 };
 

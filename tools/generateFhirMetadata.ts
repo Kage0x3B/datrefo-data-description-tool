@@ -1,5 +1,5 @@
 import fhirSchemaJson from './data/fhir.schema.json' assert { type: 'json' };
-import { generateEnum, writeGeneratedFile } from './util.js';
+import { writeGeneratedFile } from './util.js';
 import type { JSONSchema7 } from 'json-schema';
 import type {
     FhirFieldType,
@@ -26,10 +26,6 @@ const excludedKeyPatterns: RegExp[] = [
     /id/,
     /note/
 ];
-
-async function generateResourceTypeEnum() {
-    await writeGeneratedFile('FhirResourceType.ts', generateEnum('FhirResourceType', resourceTypes));
-}
 
 function isFieldExcluded(name: string) {
     for (const pattern of excludedKeyPatterns) {
@@ -148,7 +144,6 @@ async function generateResourceTypeMetadata() {
 }
 
 export async function generateFhirMetadata() {
-    await generateResourceTypeEnum();
     await generateResourceTypeMetadata();
 }
 
