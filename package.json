@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "dev": "vite dev",
-        "build": "mkdir -p ./src/lib/generated && npm run generateFhirMetadata && vite build",
+        "build": "npm run generateFhirMetadata && vite build",
         "preview": "vite preview",
         "test": "playwright test",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -12,7 +12,7 @@
         "test:unit": "vitest",
         "lint": "prettier --plugin-search-dir . --check . && eslint .",
         "format": "prettier --plugin-search-dir . --write .",
-        "generateFhirMetadata": "ts-node-esm -P tsconfig-tools.json tools/generateFhirMetadata.ts"
+        "generateFhirMetadata": "mkdir -p ./src/lib/generated && ts-node-esm -P tsconfig-tools.json tools/generateFhirResourceTypes.ts && ts-node-esm -P tsconfig-tools.json tools/generateFhirMetadata.ts"
     },
     "devDependencies": {
         "@iconify/icons-fa6-solid": "^1.2.10",

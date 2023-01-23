@@ -1,5 +1,5 @@
 import fhirSchemaJson from './data/fhir.schema.json' assert { type: 'json' };
-import { generateEnum, writeGeneratedFile } from './util.js';
+import { writeGeneratedFile } from './util.js';
 import type { JSONSchema7 } from 'json-schema';
 import type {
     FhirFieldType,
@@ -15,10 +15,6 @@ const fhirSchema = fhirSchemaJson as JSONSchema7;
 
 type FhirResourceType = keyof (typeof fhirSchemaJson)['discriminator']['mapping'];
 const resourceTypes = Object.keys(fhirSchemaJson.discriminator.mapping) as FhirResourceType[];
-
-async function generateResourceTypeEnum() {
-    await writeGeneratedFile('FhirResourceType.ts', generateEnum('FhirResourceType', resourceTypes));
-}
 
 function isFieldIncluded(resourceType: FhirResourceType, path: string, name: string) {
     if (!path) {
@@ -105,7 +101,7 @@ function extractFields(
         fieldList.push({
             path: fieldPath,
             name: fieldName,
-            type: primitiveTypeMap[schema.type],
+            type: primitiveTypeMap[schema.type as 'boolean' | 'string' | 'number'],
             description: schema.description
         });
     } else if (schema.enum) {
@@ -163,7 +159,6 @@ async function generateResourceTypeMetadata() {
 }
 
 export async function generateFhirMetadata() {
-    await generateResourceTypeEnum();
     await generateResourceTypeMetadata();
 }
 

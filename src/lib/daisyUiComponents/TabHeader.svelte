@@ -4,6 +4,6 @@
     setContext('tabHeader', true);
 </script>
 
-<div class="tabs">
+<div class="tabs w-full border-b-gray-100">
     <slot />
 </div>

@@ -9,13 +9,21 @@
     import ExcludeConditionsTab from '$lib/ExcludeConditionsTab.svelte';
     import { FhirResourceType } from '$lib/generated/FhirResourceType';
     import { EDITOR_CONTEXT } from '$lib/util/ContextKey';
+    import MainMenu from '$lib/MainMenu.svelte';
 
     let tabContainer: TabContainerType;
     let tabs: EditorTabData[] = [];
 
     export function createDocument(resourceType: FhirResourceType): InternalDocument {
+        let idCounter = 1;
+        let documentId = resourceType + idCounter++;
+
+        while ($documents[documentId]) {
+            documentId = resourceType + idCounter++;
+        }
+
         const document: InternalDocument = {
-            id: resourceType,
+            id: documentId,
             resourceType,
             condition: [],
             selections: {}
@@ -68,17 +76,21 @@
     onMount(() => {
         const testDocument = createDocument(FhirResourceType.MEDICATION);
         openTab('document', testDocument);
+        const testDocument2 = createDocument(FhirResourceType.MEDICATION);
+        openTab('document', testDocument2);
     });
 </script>
 
-<TabContainer boxed bind:this={tabContainer}>
-    {#each tabs as tab (tab.id)}
-        {#if tab.type === 'document'}
-            <DocumentTab editor={this} tabData={tab} />
-        {:else if tab.type === 'excludePatientConditions'}
-            <ExcludeConditionsTab />
-        {/if}
-    {:else}
-        TODO: Willkommen Seite
-    {/each}
-</TabContainer>
+<svelte:body class="bg-gray-400" />
+<MainMenu />
+<div class="w-full mt-6">
+    <TabContainer class="bg-white" boxed bind:this={tabContainer}>
+        {#each tabs as tab (tab.id)}
+            {#if tab.type === 'document'}
+                <DocumentTab editor={this} tabData={tab} />
+            {:else if tab.type === 'excludePatientConditions'}
+                <ExcludeConditionsTab />
+            {/if}
+        {/each}
+    </TabContainer>
+</div>
