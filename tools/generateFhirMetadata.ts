@@ -7,33 +7,34 @@ import type {
     FhirResourceMetadata,
     FhirResourceMetadataMap
 } from '../src/lib/fhir/FhirMetadata';
-import { isFhirFieldPrimitiveType } from '../src/lib/fhir/FhirFieldPrimitiveType.js';
+import { FhirFieldPrimitiveType, isFhirFieldPrimitiveType } from '../src/lib/fhir/FhirFieldPrimitiveType.js';
 import { isFhirFieldObjectType } from '../src/lib/fhir/FhirFieldObjectType.js';
+import { globalExcludedKeyList, includedFhirMetadataList } from './includedFhirMetadataList.js';
 
 const fhirSchema = fhirSchemaJson as JSONSchema7;
 
 type FhirResourceType = keyof (typeof fhirSchemaJson)['discriminator']['mapping'];
 const resourceTypes = Object.keys(fhirSchemaJson.discriminator.mapping) as FhirResourceType[];
 
-const excludedKeyPatterns: RegExp[] = [
-    /^_/,
-    /extension$/i,
-    /identifier/i,
-    /contained/i,
-    /^resourceType$/,
-    /^name$/,
-    /^expansion$/,
-    /id/,
-    /note/
-];
-
 async function generateResourceTypeEnum() {
     await writeGeneratedFile('FhirResourceType.ts', generateEnum('FhirResourceType', resourceTypes));
 }
 
-function isFieldExcluded(name: string) {
-    for (const pattern of excludedKeyPatterns) {
+function isFieldIncluded(resourceType: FhirResourceType, path: string, name: string) {
+    if (!path) {
+        return true;
+    }
+
+    for (const pattern of globalExcludedKeyList) {
         if (pattern.test(name)) {
+            return false;
+        }
+    }
+
+    const includedKeyRegexList = includedFhirMetadataList[resourceType]!;
+
+    for (const pattern of includedKeyRegexList) {
+        if (pattern.test(path)) {
             return true;
         }
     }
@@ -58,6 +59,7 @@ function resolveReference($ref: string): FhirFieldType | JSONSchema7 | undefined
 }
 
 function extractFields(
+    resourceType: FhirResourceType,
     fieldList: FhirResourceField[],
     schema: JSONSchema7,
     fieldPath = '',
@@ -70,7 +72,7 @@ function extractFields(
         return;
     }
 
-    if (isFieldExcluded(fieldName)) {
+    if (!isFieldIncluded(resourceType, fieldPath, fieldName)) {
         return;
     }
 
@@ -85,14 +87,27 @@ function extractFields(
                 description: schema.description
             });
         } else if (typeof fieldDefinition === 'object') {
-            extractFields(fieldList, fieldDefinition, fieldPath, fieldName, depth + 1);
+            extractFields(resourceType, fieldList, fieldDefinition, fieldPath, fieldName, depth + 1);
         }
     } else if (schema.type === 'array') {
         if (typeof schema.items === 'object' && !Array.isArray(schema.items)) {
-            extractFields(fieldList, schema.items, fieldPath, fieldName, depth + 1);
+            extractFields(resourceType, fieldList, schema.items, fieldPath, fieldName, depth + 1);
         } else {
             console.warn(`Detected unsupported array field at ${fieldPath}, items:`, schema.items);
         }
+    } else if (typeof schema.type === 'string' && ['boolean', 'string', 'number'].includes(schema.type)) {
+        const primitiveTypeMap = {
+            boolean: FhirFieldPrimitiveType.BOOLEAN,
+            string: FhirFieldPrimitiveType.STRING,
+            number: FhirFieldPrimitiveType.DECIMAL
+        };
+
+        fieldList.push({
+            path: fieldPath,
+            name: fieldName,
+            type: primitiveTypeMap[schema.type],
+            description: schema.description
+        });
     } else if (schema.enum) {
         fieldList.push({
             path: fieldPath,
@@ -110,7 +125,7 @@ function extractFields(
             const propertySchema = schema.properties[key] as JSONSchema7;
             const propertyPath = fieldPath ? fieldPath + '.' + key : key;
 
-            extractFields(fieldList, propertySchema, propertyPath, key, depth + 1);
+            extractFields(resourceType, fieldList, propertySchema, propertyPath, key, depth + 1);
         }
     } else {
         console.warn(`Detected field ${fieldPath} which doesn't resolve into known types`, schema);
@@ -121,8 +136,8 @@ async function generateResourceTypeMetadata() {
     const resourceMetadataMap: FhirResourceMetadataMap = {};
 
     for (const type of resourceTypes) {
-        if (!['Patient', 'Medication'].includes(type)) {
-            continue; // TODO: Only for debugging
+        if (!Object.keys(includedFhirMetadataList).includes(type)) {
+            continue;
         }
 
         const definition = fhirSchema.definitions![type] as JSONSchema7;
@@ -135,7 +150,7 @@ async function generateResourceTypeMetadata() {
 
         const fields: FhirResourceField[] = [];
 
-        extractFields(fields, definition);
+        extractFields(type, fields, definition);
 
         resourceMetadataMap[type] = {
             name: type,

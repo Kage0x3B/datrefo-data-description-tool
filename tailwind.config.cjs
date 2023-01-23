@@ -5,8 +5,20 @@ const config = {
     },
     plugins: [require('@tailwindcss/typography'), require('daisyui')],
     daisyui: {
-        themes: ['emerald', 'business'],
-        darkTheme: 'business'
+        themes: [
+            'emerald',
+            {
+                emeraldDark: {
+                    'color-scheme': 'dark',
+                    primary: '#66cc8a',
+                    secondary: '#377cfb',
+                    accent: '#ea5234',
+                    neutral: '#23282E',
+                    'base-100': '#202020'
+                }
+            }
+        ],
+        darkTheme: 'emeraldDark'
     }
 };
 
