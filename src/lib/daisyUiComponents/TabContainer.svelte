@@ -1,6 +1,6 @@
 <script lang="ts">
     import { writable } from 'svelte/store';
-    import classnames from '../util/util';
+    import classnames from './util';
     import { createEventDispatcher, setContext } from 'svelte';
     import TabHeader from '$lib/daisyUiComponents/TabHeader.svelte';
 

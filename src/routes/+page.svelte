@@ -1,20 +1,25 @@
 <script lang="ts">
     import TabContainer from '$lib/daisyUiComponents/TabContainer.svelte';
     import type { TabContainerType } from '$lib/types/component/TabContainer';
-    import { onMount, setContext, tick } from 'svelte';
+    import { setContext, tick } from 'svelte';
     import { documents } from '$lib/projectData';
     import type { InternalDocument } from '$lib/types/InternalDocument';
     import type { DaTreFoEditorContext, EditorTabData, TabType } from '$lib/types/component/DaTreFoEditor';
-    import DocumentTab from '$lib/DocumentTab.svelte';
-    import ExcludeConditionsTab from '$lib/ExcludeConditionsTab.svelte';
+    import DocumentTab from '$lib/components/DocumentTab.svelte';
+    import ExcludeConditionsTab from '$lib/components/ExcludeConditionsTab.svelte';
     import { FhirResourceType } from '$lib/generated/FhirResourceType';
     import { EDITOR_CONTEXT } from '$lib/util/ContextKey';
-    import MainMenu from '$lib/MainMenu.svelte';
+    import DocumentList from '$lib/components/documentList/DocumentList.svelte';
+    import MainMenu from '$lib/components/MainMenu.svelte';
+    import type { ModalType } from '$lib/components/modal/ModalType';
+    import CreateDocumentModal from '$lib/components/modal/CreateDocumentModal.svelte';
 
     let tabContainer: TabContainerType;
     let tabs: EditorTabData[] = [];
 
-    export function createDocument(resourceType: FhirResourceType): InternalDocument {
+    let createDocumentModal: ModalType;
+
+    function createDocument(resourceType: FhirResourceType): InternalDocument {
         let idCounter = 1;
         let documentId = resourceType + idCounter++;
 
@@ -34,7 +39,7 @@
         return document;
     }
 
-    export async function openTab(type: TabType, documentOrId?: InternalDocument | string): Promise<void> {
+    async function openTab(type: TabType, documentOrId?: InternalDocument | string): Promise<void> {
         const documentId = typeof documentOrId === 'string' ? documentOrId : documentOrId?.id;
         let tabData: EditorTabData;
 
@@ -51,46 +56,59 @@
             };
         }
 
+        if (tabs.find((tab) => tab.id === tabData.id)) {
+            focusTab(tabData.id);
+
+            return;
+        }
+
         tabs = [...tabs, tabData];
 
         await tick();
 
-        tabContainer.setActiveTab(tabData.id);
+        focusTab(tabData.id);
     }
 
-    export function focusTab(tabId: string) {
+    function focusTab(tabId: string) {
         tabContainer.setActiveTab(tabId);
     }
 
-    export function closeTab(tabId: string) {
+    function closeTab(tabId: string) {
         tabs = tabs.filter((tab) => tab.id !== tabId);
+    }
+
+    function showModal(type: 'createDocument'): void {
+        if (type === 'createDocument') {
+            createDocumentModal.open();
+        } else {
+            console.warn(`Invalid modal type ${type}`);
+        }
     }
 
     setContext(EDITOR_CONTEXT, {
         createDocument,
         openTab,
         focusTab,
-        closeTab
+        closeTab,
+        showModal
     } satisfies DaTreFoEditorContext);
-
-    onMount(() => {
-        const testDocument = createDocument(FhirResourceType.MEDICATION);
-        openTab('document', testDocument);
-        const testDocument2 = createDocument(FhirResourceType.MEDICATION);
-        openTab('document', testDocument2);
-    });
 </script>
 
-<svelte:body class="bg-gray-400" />
 <MainMenu />
-<div class="w-full mt-6">
-    <TabContainer class="bg-white" boxed bind:this={tabContainer}>
-        {#each tabs as tab (tab.id)}
-            {#if tab.type === 'document'}
-                <DocumentTab editor={this} tabData={tab} />
-            {:else if tab.type === 'excludePatientConditions'}
-                <ExcludeConditionsTab />
-            {/if}
-        {/each}
-    </TabContainer>
+<div class="flex flex-row flex-wrap h-full">
+    <aside class="w-full sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 border-r-2 dark:border-base-200 h-full">
+        <DocumentList />
+    </aside>
+    <main class="w-full sm:w-2/3 md:w-3/4 pt-1 px-2">
+        <TabContainer boxed bind:this={tabContainer}>
+            {#each tabs as tab (tab.id)}
+                {#if tab.type === 'document'}
+                    <DocumentTab editor={this} tabData={tab} />
+                {:else if tab.type === 'excludePatientConditions'}
+                    <ExcludeConditionsTab />
+                {/if}
+            {/each}
+        </TabContainer>
+    </main>
 </div>
+<CreateDocumentModal bind:this={createDocumentModal} />

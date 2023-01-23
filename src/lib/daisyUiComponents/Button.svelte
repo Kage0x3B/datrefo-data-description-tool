@@ -1,5 +1,5 @@
 <script lang="ts">
-    import classnames from '$lib/util/util';
+    import classnames from '$lib/daisyUiComponents/util';
     import type { ThemeButtonStyle, ThemeColor, ThemeSize } from '$lib/daisyUiComponents/Theme';
 
     let className = '';
@@ -44,11 +44,26 @@
 </script>
 
 {#if href}
-    <a {...$$restProps} class={classes} disabled={disabled ? true : undefined} bind:this={element} on:click {href} aria-label={ariaLabel}>
+    <a
+        {...$$restProps}
+        class={classes}
+        disabled={disabled ? true : undefined}
+        bind:this={element}
+        on:click
+        {href}
+        aria-label={ariaLabel}
+    >
         <slot />
     </a>
 {:else}
-    <button {...$$restProps} class={classes} disabled={disabled ? true : undefined} bind:this={element} on:click aria-label={ariaLabel}>
+    <button
+        {...$$restProps}
+        class={classes}
+        disabled={disabled ? true : undefined}
+        bind:this={element}
+        on:click
+        aria-label={ariaLabel}
+    >
         <slot />
     </button>
 {/if}

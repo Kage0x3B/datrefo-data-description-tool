@@ -3,10 +3,12 @@
     import Tab from '$lib/daisyUiComponents/Tab.svelte';
     import Button from '$lib/daisyUiComponents/Button.svelte';
     import type { DaTreFoEditorContext, EditorDocumentTabData } from '$lib/types/component/DaTreFoEditor';
-    import { documents } from '$lib/projectData.js';
+    import { documents } from '$lib/projectData';
     import type { InternalDocument } from '$lib/types/InternalDocument';
     import { getContext } from 'svelte';
     import { EDITOR_CONTEXT } from '$lib/util/ContextKey';
+    import CreateDocumentModal from '$lib/components/modal/CreateDocumentModal.svelte';
+    import type { ModalType } from '$lib/components/modal/ModalType';
 
     const editor: DaTreFoEditorContext = getContext(EDITOR_CONTEXT);
     export let tabData: EditorDocumentTabData;

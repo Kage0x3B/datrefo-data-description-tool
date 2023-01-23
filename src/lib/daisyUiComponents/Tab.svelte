@@ -1,6 +1,6 @@
 <script lang="ts">
     import { getContext, onMount } from 'svelte';
-    import classnames from '$lib/util/util.js';
+    import classnames from '$lib/daisyUiComponents/util';
 
     export let tabHeaderClass = '';
     let className = '';

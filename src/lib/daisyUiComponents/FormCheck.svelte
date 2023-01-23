@@ -1,5 +1,5 @@
 <script lang="ts">
-    import classnames from '$lib/util/util';
+    import classnames from '$lib/daisyUiComponents/util';
     import type { ThemeColor, ThemeSize } from '$lib/daisyUiComponents/Theme';
 
     let className = '';
