@@ -100,10 +100,10 @@
         <DocumentList />
     </aside>
     <main class="w-full sm:w-2/3 md:w-3/4 pt-1 px-2">
-        <TabContainer boxed bind:this={tabContainer}>
+        <TabContainer boxed bind:this={tabContainer} class="bg-gray-100 dark:bg-neutral">
             {#each tabs as tab (tab.id)}
                 {#if tab.type === 'document'}
-                    <DocumentTab editor={this} tabData={tab} />
+                    <DocumentTab tabData={tab} />
                 {:else if tab.type === 'excludePatientConditions'}
                     <ExcludeConditionsTab />
                 {/if}

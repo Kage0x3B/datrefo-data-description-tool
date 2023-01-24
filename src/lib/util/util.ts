@@ -1,5 +1,4 @@
 // eslint-disable-next-line @typescript-eslint/ban-types
-import type { FhirResourceType } from '$lib/generated/FhirResourceType';
 
 export function hasOwnProperty<X extends {}, Y extends PropertyKey>(obj: X, prop: Y): obj is X & Record<Y, unknown> {
     return Object.hasOwn(obj, prop);
@@ -26,4 +25,33 @@ export function enumKeys<O extends object, K extends keyof O = keyof O>(obj: O):
 
 export function enumValues<O extends object>(obj: O): O[keyof O][] {
     return enumKeys(obj).map((key) => obj[key]);
+}
+
+export function debounce<ArgsType extends unknown[]>(
+    func: (...args: ArgsType) => void,
+    timeout: number
+): (...args: ArgsType) => void {
+    let timer: NodeJS.Timeout;
+
+    return (...args: ArgsType) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => func(...args), timeout);
+    };
+}
+
+export function debounceLeading<ArgsType extends unknown[]>(func: (...args: ArgsType) => void, timeout: number) {
+    let timer: NodeJS.Timeout | undefined;
+
+    return (...args: ArgsType) => {
+        if (!timer) {
+            // @ts-ignore
+            func.apply(this, args);
+        }
+
+        clearTimeout(timer);
+
+        timer = setTimeout(() => {
+            timer = undefined;
+        }, timeout);
+    };
 }

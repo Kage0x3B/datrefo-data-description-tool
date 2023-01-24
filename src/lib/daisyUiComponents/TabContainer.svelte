@@ -30,7 +30,7 @@
         dispatch('tab', tabId);
     }
 
-    $: classes = classnames(className, {
+    $: classes = classnames('p-2', className, {
         'tabs-boxed': boxed
     });
 </script>

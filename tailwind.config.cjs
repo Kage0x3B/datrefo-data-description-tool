@@ -4,6 +4,7 @@ const config = {
         extend: {}
     },
     plugins: [require('@tailwindcss/typography'), require('daisyui')],
+    darkMode: ['class', '[data-theme="emeraldDark"]'],
     daisyui: {
         themes: [
             'emerald',

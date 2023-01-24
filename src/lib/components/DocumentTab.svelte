@@ -31,13 +31,13 @@
         {document.displayName ?? document.resourceType} [{document.id}]
         <Button btnStyle="ghost" size="xs" on:click={() => editor.closeTab(tabData.id)}>x</Button>
     </div>
-    <div class="p-3">
+    <div>
         <h1 class="mb-4 font-bold text-xl">
             {resourceTypeName} Dokument
         </h1>
         {#if fhirMetadata}
             {#each fhirMetadata.fields as field (field.path)}
-                <SelectableFhirField {resourceType} {field} />
+                <SelectableFhirField documentId={tabData.documentId} {resourceType} {field} fieldPath={field.path} />
             {/each}
         {:else}
             Keine Daten für Dokumententyp {document.resourceType} gefunden!

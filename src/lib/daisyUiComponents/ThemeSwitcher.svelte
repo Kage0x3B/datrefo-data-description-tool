@@ -8,7 +8,7 @@
 
     const themeMap = {
         light: 'emerald',
-        dark: 'business'
+        dark: 'emeraldDark'
     };
 
     const theme = writable<'light' | 'dark'>('light');
