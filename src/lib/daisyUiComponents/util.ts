@@ -21,6 +21,6 @@ function toClassName(value: ClassNameType): string {
     return result;
 }
 
-export default function classnames(...args: ClassNameType[]): string {
+export function classnames(...args: ClassNameType[]): string {
     return args.map(toClassName).filter(Boolean).join(' ');
 }

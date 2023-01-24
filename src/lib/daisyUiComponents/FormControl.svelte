@@ -1,5 +1,5 @@
 <script lang="ts">
-    import classnames from '$lib/daisyUiComponents/util';
+    import { classnames } from '$lib/daisyUiComponents/util';
 
     export let label = '';
 

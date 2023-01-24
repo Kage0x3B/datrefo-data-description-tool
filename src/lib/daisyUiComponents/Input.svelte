@@ -1,6 +1,6 @@
 <script lang="ts">
     import FormCheck from './FormCheck.svelte';
-    import classnames from '$lib/daisyUiComponents/util';
+    import { classnames } from '$lib/daisyUiComponents/util';
     import type { InputType, ThemeColor, ThemeInputStyle, ThemeSize } from '$lib/daisyUiComponents/Theme';
 
     let className = '';

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import classnames from '$lib/daisyUiComponents/util';
+    import { classnames } from '$lib/daisyUiComponents/util';
     import Portal from '$lib/daisyUiComponents/Portal.svelte';
     import { afterUpdate, onMount } from 'svelte';
     import { hasOwnProperty } from '$lib/util/util';
