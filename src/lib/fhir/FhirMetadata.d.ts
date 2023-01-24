@@ -3,7 +3,7 @@ import { FhirFieldPrimitiveType } from '$lib/fhir/FhirFieldPrimitiveType';
 import { FhirFieldObjectType } from '$lib/fhir/FhirFieldObjectType';
 import type { JSONSchema7Type } from 'json-schema';
 
-export type FhirFieldInternalType = 'enum';
+export type FhirFieldInternalType = 'definition' | 'enum';
 export type FhirFieldType = FhirFieldInternalType | FhirFieldPrimitiveType | FhirFieldObjectType;
 
 export interface FhirResourceField {
@@ -19,10 +19,16 @@ export interface FhirResourceField {
      * Field type
      */
     type: FhirFieldType;
+    definition?: string;
     /**
      * Only set when type is enum
      */
     enumValues?: JSONSchema7Type[];
+}
+
+export interface FhirDefinition {
+    name: string;
+    fields: ResourceField[];
 }
 
 export interface FhirResourceMetadata {
@@ -30,4 +36,6 @@ export interface FhirResourceMetadata {
     fields: ResourceField[];
 }
 
-export type FhirResourceMetadataMap = Partial<Record<FhirResourceType, FhirResourceMetadata>>;
+export type FhirResourceMetadataMap = Partial<Record<FhirResourceType, FhirResourceMetadata>> & {
+    definitions: Record<string, FhirDefinition>;
+};

@@ -6,6 +6,6 @@ export default {
     localeName: 'English',
     fhir: {
         resourceType: resourceTypeEn,
-        field: fieldsEn
+        ...fieldsEn
     }
 } satisfies LocaleData;

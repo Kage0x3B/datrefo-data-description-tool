@@ -5,18 +5,13 @@ export const globalExcludedKeyList: RegExp[] = buildRegexList([
     /extended/i,
     /extension/i,
     /reference/i,
+    /^id$/,
     /^identifier$/,
     /^assigner$/,
-    /^resourceType$/,
-    /^alternative$/,
-    /^answer$/,
-    /^definitionByCombination$/,
-    /^step$/,
-    /^translation$/,
-    /^synonym$/
+    /^resourceType$/
 ]);
 
-export const includedFhirMetadataList: Partial<Record<FhirResourceType, RegExp[]>> = {
+export const includedFhirMetadataList: Partial<Record<FhirResourceType | string, RegExp[]>> = {
     [FhirResourceType.PATIENT]: buildRegexList(['gender', 'birthDate', 'deceased', 'multipleBirth']),
     [FhirResourceType.MEDICATION]: buildRegexList(['code', 'status', 'doseForm', 'totalVolume', 'ingredient', 'batch']),
     [FhirResourceType.MEDICATION_ADMINISTRATION]: buildRegexList([

@@ -10,7 +10,7 @@
     import type { FhirResourceMetadata } from '$lib/fhir/FhirMetadata';
     import { t } from 'svelte-i18n';
     import { capitalCase } from 'change-case';
-    import { convertI18nFhirPath } from '$lib/fhir/fhirI18nUtil.js';
+    import SelectableFhirField from '$lib/components/SelectableFhirField.svelte';
 
     const editor: DaTreFoEditorContext = getContext(EDITOR_CONTEXT);
     export let tabData: EditorDocumentTabData;
@@ -31,16 +31,16 @@
         {document.displayName ?? document.resourceType} [{document.id}]
         <Button btnStyle="ghost" size="xs" on:click={() => editor.closeTab(tabData.id)}>x</Button>
     </div>
-    <h1>
-        {resourceTypeName} Dokument
-    </h1>
-    {#if fhirMetadata}
-        {#each fhirMetadata.fields as field (field.path)}
-            <div title={$t(convertI18nFhirPath(resourceType, field.path) + '.description', { default: '' })}>
-                {$t(convertI18nFhirPath(resourceType, field.path) + '.name', { default: capitalCase(field.name) })} ({field.path})
-            </div>
-        {/each}
-    {:else}
-        Keine Daten für Dokumententyp {document.resourceType} gefunden!
-    {/if}
+    <div class="p-3">
+        <h1 class="mb-4 font-bold text-xl">
+            {resourceTypeName} Dokument
+        </h1>
+        {#if fhirMetadata}
+            {#each fhirMetadata.fields as field (field.path)}
+                <SelectableFhirField {resourceType} {field} />
+            {/each}
+        {:else}
+            Keine Daten für Dokumententyp {document.resourceType} gefunden!
+        {/if}
+    </div>
 </Tab>
