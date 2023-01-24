@@ -1,6 +1,20 @@
 import { FhirResourceType } from '../src/lib/generated/FhirResourceType.js';
 
-export const globalExcludedKeyList: RegExp[] = buildRegexList([/^_/, /extended/i, /extension/i, /reference/i]);
+export const globalExcludedKeyList: RegExp[] = buildRegexList([
+    /^_/,
+    /extended/i,
+    /extension/i,
+    /reference/i,
+    /^identifier$/,
+    /^assigner$/,
+    /^resourceType$/,
+    /^alternative$/,
+    /^answer$/,
+    /^definitionByCombination$/,
+    /^step$/,
+    /^translation$/,
+    /^synonym$/
+]);
 
 export const includedFhirMetadataList: Partial<Record<FhirResourceType, RegExp[]>> = {
     [FhirResourceType.PATIENT]: buildRegexList(['gender', 'birthDate', 'deceased', 'multipleBirth']),
@@ -29,6 +43,12 @@ export const includedFhirMetadataList: Partial<Record<FhirResourceType, RegExp[]
         'component'
     ])
 };
+
+/* For testing with all resource types
+for (const type of enumValues(FhirResourceType)) {
+    includedFhirMetadataList[type] ??= [/.+/];
+}
+*/
 
 function buildRegexList(list: (string | RegExp)[]): RegExp[] {
     return list.map((value) => {

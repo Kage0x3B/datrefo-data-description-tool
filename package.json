@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "dev": "vite dev",
-        "build": "npm run generateFhirMetadata && vite build",
+        "build": "npm run generateMetadata && vite build",
         "preview": "vite preview",
         "test": "playwright test",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -12,7 +12,9 @@
         "test:unit": "vitest",
         "lint": "prettier --plugin-search-dir . --check . && eslint .",
         "format": "prettier --plugin-search-dir . --write .",
-        "generateFhirMetadata": "mkdir -p ./src/lib/generated && ts-node-esm -P tsconfig-tools.json tools/generateFhirResourceTypes.ts && ts-node-esm -P tsconfig-tools.json tools/generateFhirMetadata.ts"
+        "generateMetadata": "mkdir -p ./src/lib/generated && npm run generateFhirMetadata && npm run generateFhirLocaleData",
+        "generateFhirMetadata": "ts-node-esm -P tsconfig-tools.json tools/generateFhirResourceTypes.ts && ts-node-esm -P tsconfig-tools.json tools/generateFhirMetadata.ts",
+        "generateFhirLocaleData": "mkdir -p ./src/lib/generated/i18n/fhir && ts-node-esm -P tsconfig-tools.json tools/generateFhirLocaleData.ts"
     },
     "devDependencies": {
         "@iconify/icons-fa6-solid": "^1.2.10",
@@ -40,6 +42,7 @@
         "prettier-plugin-svelte": "^2.9.0",
         "svelte": "^3.55.1",
         "svelte-check": "^3.0.2",
+        "svelte-i18n": "^3.6.0",
         "svelte-preprocess": "^5.0.0",
         "tailwindcss": "^3.2.4",
         "ts-node": "^10.9.1",

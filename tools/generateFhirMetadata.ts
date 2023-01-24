@@ -16,7 +16,7 @@ const fhirSchema = fhirSchemaJson as JSONSchema7;
 type FhirResourceType = keyof (typeof fhirSchemaJson)['discriminator']['mapping'];
 const resourceTypes = Object.keys(fhirSchemaJson.discriminator.mapping) as FhirResourceType[];
 
-function isFieldIncluded(resourceType: FhirResourceType, path: string, name: string) {
+export function isFieldIncluded(resourceType: FhirResourceType, path: string, name: string) {
     if (!path) {
         return true;
     }
@@ -38,7 +38,7 @@ function isFieldIncluded(resourceType: FhirResourceType, path: string, name: str
     return false;
 }
 
-function resolveReference($ref: string): FhirFieldType | JSONSchema7 | undefined {
+export function resolveReference($ref: string): FhirFieldType | JSONSchema7 | undefined {
     const definitionName = $ref.substring('#/definitions/'.length);
 
     if (isFhirFieldPrimitiveType(definitionName) || isFhirFieldObjectType(definitionName)) {
@@ -79,8 +79,7 @@ function extractFields(
             fieldList.push({
                 path: fieldPath,
                 name: fieldName,
-                type: fieldDefinition,
-                description: schema.description
+                type: fieldDefinition
             });
         } else if (typeof fieldDefinition === 'object') {
             extractFields(resourceType, fieldList, fieldDefinition, fieldPath, fieldName, depth + 1);
@@ -101,20 +100,21 @@ function extractFields(
         fieldList.push({
             path: fieldPath,
             name: fieldName,
-            type: primitiveTypeMap[schema.type as 'boolean' | 'string' | 'number'],
-            description: schema.description
+            type: primitiveTypeMap[schema.type as 'boolean' | 'string' | 'number']
+            // description: schema.description
         });
     } else if (schema.enum) {
         fieldList.push({
             path: fieldPath,
             name: fieldName,
             type: 'enum',
-            enumValues: schema.enum,
-            description: schema.description
+            enumValues: schema.enum
+            // description: schema.description
         });
     } else if (schema.properties) {
         for (const key of Object.keys(schema.properties)) {
-            if (typeof schema.properties[key] === 'boolean') {
+            // Ignore boolean properties and prevent recursion into properties with the same name
+            if (typeof schema.properties[key] === 'boolean' || key === fieldName) {
                 continue;
             }
 
@@ -123,6 +123,9 @@ function extractFields(
 
             extractFields(resourceType, fieldList, propertySchema, propertyPath, key, depth + 1);
         }
+    } else if (schema.oneOf?.length) {
+        // TODO: Can't handle oneOf yet
+        return;
     } else {
         console.warn(`Detected field ${fieldPath} which doesn't resolve into known types`, schema);
     }
@@ -150,7 +153,6 @@ async function generateResourceTypeMetadata() {
 
         resourceMetadataMap[type] = {
             name: type,
-            description: definition.description,
             fields
         } as FhirResourceMetadata;
     }

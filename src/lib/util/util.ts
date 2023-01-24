@@ -1,4 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-types
+import type { FhirResourceType } from '$lib/generated/FhirResourceType';
+
 export function hasOwnProperty<X extends {}, Y extends PropertyKey>(obj: X, prop: Y): obj is X & Record<Y, unknown> {
     return Object.hasOwn(obj, prop);
 }

@@ -3,6 +3,7 @@
     import type { DaTreFoEditorContext } from '$lib/types/component/DaTreFoEditor.js';
     import { getContext } from 'svelte';
     import { EDITOR_CONTEXT } from '$lib/util/ContextKey.js';
+    import LocaleSwitcher from '$lib/components/LocaleSwitcher.svelte';
 
     const editor: DaTreFoEditorContext = getContext(EDITOR_CONTEXT);
 </script>
@@ -26,6 +27,7 @@
     </div>
     <div class="flex-none">
         <ul class="menu menu-horizontal px-1">
+            <LocaleSwitcher />
             <ThemeSwitcher />
         </ul>
     </div>

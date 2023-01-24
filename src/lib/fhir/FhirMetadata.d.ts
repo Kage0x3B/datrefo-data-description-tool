@@ -23,16 +23,11 @@ export interface FhirResourceField {
      * Only set when type is enum
      */
     enumValues?: JSONSchema7Type[];
-    /**
-     * Description for this field
-     */
-    description?: string;
 }
 
 export interface FhirResourceMetadata {
     name: FhirResourceType;
-    description?: string;
     fields: ResourceField[];
 }
 
-export type FhirResourceMetadataMap = Partial<Record<FhirResourceType, ResourceMetadata>>;
+export type FhirResourceMetadataMap = Partial<Record<FhirResourceType, FhirResourceMetadata>>;
