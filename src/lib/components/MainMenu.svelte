@@ -21,7 +21,11 @@
                 </li>
                 <li><a class="px-2 py-2 pointer-events-none text-neutral-content/80">Neues Projekt...</a></li>
                 <li><a class="px-2 py-2 pointer-events-none text-neutral-content/80">Speichern</a></li>
-                <li><a class="px-2 py-2 pointer-events-none text-neutral-content/80">Exportieren...</a></li>
+                <li>
+                    <a class="px-2 py-2" on:click={() => editor.showModal('export')}
+                        >DaTreFo Forschungsdaten Beschreibung exportieren...</a
+                    >
+                </li>
             </ul>
         </div>
     </div>

@@ -10,4 +10,4 @@ export interface SelectionOptionsModalType extends ModalType {
     open(documentId: string, selectionFieldPath: string, selectionField: FhirResourceField);
 }
 
-type ModalTypeNames = 'createDocument' | 'selectionOptions';
+type ModalTypeNames = 'createDocument' | 'selectionOptions' | 'export';

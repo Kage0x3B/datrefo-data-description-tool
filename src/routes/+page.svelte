@@ -14,12 +14,14 @@
     import type { ModalType, ModalTypeNames, SelectionOptionsModalType } from '$lib/components/modal/ModalType';
     import CreateDocumentModal from '$lib/components/modal/CreateDocumentModal.svelte';
     import SelectionOptionsModal from '$lib/components/modal/SelectionOptionsModal.svelte';
+    import ExportModal from '$lib/components/modal/ExportModal.svelte';
 
     let tabContainer: TabContainerType;
     let tabs: EditorTabData[] = [];
 
     let createDocumentModal: ModalType;
     let selectionOptionsModal: SelectionOptionsModalType;
+    let exportModal: ModalType;
 
     function createDocument(resourceType: FhirResourceType): InternalDocument {
         let idCounter = 1;
@@ -84,6 +86,8 @@
             createDocumentModal.open();
         } else if (type === 'selectionOptions') {
             selectionOptionsModal.open(...args);
+        } else if (type === 'export') {
+            exportModal.open();
         } else {
             console.warn(`Invalid modal type ${type}`);
         }
@@ -117,3 +121,4 @@
 </div>
 <CreateDocumentModal bind:this={createDocumentModal} />
 <SelectionOptionsModal bind:this={selectionOptionsModal} />
+<ExportModal bind:this={exportModal} />
