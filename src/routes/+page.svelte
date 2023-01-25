@@ -102,6 +102,10 @@
     } satisfies DaTreFoEditorContext);
 </script>
 
+<svelte:head>
+    <title>DaTreFo Forschungsdaten Beschreibungstool</title>
+</svelte:head>
+
 <MainMenu />
 <div class="flex flex-row flex-wrap h-full">
     <aside class="w-full sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 border-r-2 dark:border-base-200 h-full">
