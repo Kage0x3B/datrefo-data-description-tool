@@ -5,5 +5,16 @@
                 "name": "Alter"
             }
         }
+    },
+    "fhir": {
+        "type": {
+            "base64Binary": {
+                "name": "Base-64 kodierte Binärdaten"
+            },
+            "boolean": {
+                "name": "Wahrheitswert",
+                "description": "Wert \"wahr\" oder \"falsch\""
+            }
+        }
     }
 }

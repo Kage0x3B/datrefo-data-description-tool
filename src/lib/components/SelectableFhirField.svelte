@@ -24,10 +24,10 @@
     import type { DaTreFoEditorContext } from '$lib/types/component/DaTreFoEditor';
     import { getContext } from 'svelte';
     import { EDITOR_CONTEXT } from '$lib/util/ContextKey';
+    import type { MessageFormatter } from '$lib/types/MessageFormatter';
 
     export let documentId: string;
     export let resourceType: FhirResourceType;
-    export let definitionName: string | undefined = undefined;
     export let field: FhirResourceField;
     export let fieldPath: string;
     export let depth = 0;
@@ -51,15 +51,29 @@
 
     $: fieldDisplayName =
         $t(convertI18nFhirFieldPath(resourceType, fieldPath) + '.name', { default: '' }) ||
-        (definitionName
-            ? $t(convertI18nFhirDefinitionPath(definitionName, field.path) + '.name', { default: '' })
+        (field.definition
+            ? $t(convertI18nFhirDefinitionPath(field.definition, field.path) + '.name', { default: '' })
             : '') ||
         capitalCase(field.name);
     $: fieldDescription =
         $t(convertI18nFhirFieldPath(resourceType, fieldPath) + '.description', { default: '' }) ||
-        (definitionName
-            ? $t(convertI18nFhirDefinitionPath(definitionName, field.path) + '.description', { default: '' })
+        (field.definition
+            ? $t(convertI18nFhirDefinitionPath(field.definition, field.path) + '.description', { default: '' })
             : '');
+    $: fieldType = getFieldType($t, resourceType, field.path, fieldPath);
+
+    function getFieldType(
+        translate: MessageFormatter,
+        resourceType: FhirResourceType,
+        fieldPath: string,
+        fullFieldPath: string
+    ): string {
+        if (field.definition) {
+            return capitalCase(field.definition);
+        }
+
+        return capitalCase(field.type);
+    }
 
     function toggle() {
         if (indirectlySelected) {
@@ -133,7 +147,9 @@
                             inputSize="sm"
                         />
                     </div>
-                    <span>{fieldDisplayName} <span class="text-base-content/80">({capitalCase(field.type)})</span></span
+                    <span title="FHIR Pfad: '{fieldPath}'"
+                        >{fieldDisplayName}
+                        <span class="text-base-content/80">({fieldType})</span></span
                     >
                     {#if fieldDescription && hovered}
                         <Button

@@ -9,5 +9,5 @@ export function convertI18nFhirFieldPath(resourceType: FhirResourceType, fieldPa
 }
 
 export function convertI18nFhirDefinitionPath(definitionName: string, fieldPath: string) {
-    return `fhir.definition.${definitionName}.${fieldPath.replace(/\\./g, '_')}`;
+    return `fhir.definition.${definitionName}.field.${fieldPath.replace(/\\./g, '_')}`;
 }

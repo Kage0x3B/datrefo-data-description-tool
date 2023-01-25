@@ -1,4 +1,5 @@
 import { FhirResourceType } from '../src/lib/generated/FhirResourceType.js';
+import { enumValues } from '../src/lib/util/util.js';
 
 export const globalExcludedKeyList: RegExp[] = buildRegexList([
     /^_/,
@@ -39,11 +40,10 @@ export const includedFhirMetadataList: Partial<Record<FhirResourceType | string,
     ])
 };
 
-/* For testing with all resource types
+/* For testing with all resource types */
 for (const type of enumValues(FhirResourceType)) {
     includedFhirMetadataList[type] ??= [/.+/];
 }
-*/
 
 function buildRegexList(list: (string | RegExp)[]): RegExp[] {
     return list.map((value) => {

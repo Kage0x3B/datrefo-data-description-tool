@@ -21,9 +21,22 @@
     let resourceType: FhirResourceType | undefined = undefined;
     let showAll = false;
 
-    $: resourceTypeList = showAll
-        ? enumValues(FhirResourceType)
-        : Object.keys(fhirResourceTypeMetadata).filter((key) => key !== 'definitions');
+    const importantResourceTypes: FhirResourceType[] = [
+        FhirResourceType.PATIENT,
+        FhirResourceType.MEDICATION,
+        FhirResourceType.MEDICATION_ADMINISTRATION,
+        FhirResourceType.MEDICATION_DISPENSE,
+        FhirResourceType.MEDICATION_REQUEST,
+        FhirResourceType.MEDICATION_USAGE,
+        FhirResourceType.MEDICATION_KNOWLEDGE,
+        FhirResourceType.OBSERVATION,
+        FhirResourceType.OPERATION_DEFINITION,
+        FhirResourceType.OPERATION_OUTCOME,
+        FhirResourceType.PROCEDURE
+    ].sort();
+    $: resourceTypeList = showAll ? enumValues(FhirResourceType) : importantResourceTypes;
+
+    //Object.keys(fhirResourceTypeMetadata).filter((key) => key !== 'definitions');
 
     export function open() {
         resourceType = undefined;
