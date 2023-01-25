@@ -7,8 +7,13 @@ const config = {
     darkMode: ['class', '[data-theme="emeraldDark"]'],
     daisyui: {
         themes: [
-            'emerald',
             {
+                emerald: {
+                    ...require('daisyui/src/colors/themes')['[data-theme=emerald]'],
+                    '--animation-btn': '0.25s',
+                    '--animation-input': '.2s',
+                    '--btn-focus-scale': '0.95'
+                },
                 emeraldDark: {
                     'color-scheme': 'dark',
                     primary: '#66cc8a',

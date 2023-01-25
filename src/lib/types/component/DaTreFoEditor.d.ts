@@ -1,5 +1,6 @@
 import { FhirResourceType } from '$lib/generated/FhirResourceType';
 import { InternalDocument } from '$lib/types/InternalDocument';
+import { ModalTypeNames } from '$lib/components/modal/ModalType';
 
 export type TabId = 'excludePatientConditions' | string;
 export type TabType = 'document' | 'excludePatientConditions';
@@ -26,5 +27,5 @@ export interface DaTreFoEditorContext {
 
     closeTab(tabId: string): void;
 
-    showModal(type: 'createDocument'): void;
+    showModal(type: ModalTypeNames, ...args: unknown[]);
 }

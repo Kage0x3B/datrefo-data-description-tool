@@ -11,6 +11,12 @@ export const documents: Writable<Record<string, InternalDocument>> = writable({
         resourceType: FhirResourceType.MEDICATION,
         condition: [],
         selections: {}
+    },
+    Patient1: {
+        id: 'Patient1',
+        resourceType: FhirResourceType.PATIENT,
+        condition: [],
+        selections: {}
     }
 });
 export const excludePatientConditions: Writable<DaTreFoCondition[]> = writable([]);

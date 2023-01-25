@@ -36,6 +36,6 @@
 
 <li>
     <a on:click={toggle}>
-        <Icon icon={$theme === 'light' ? sunIcon : moonIcon} />
+        <Icon icon={$theme === 'light' ? moonIcon : sunIcon} />
     </a>
 </li>

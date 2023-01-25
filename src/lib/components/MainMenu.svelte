@@ -19,9 +19,9 @@
                 <li class="menu-title mt-2">
                     <span class="pl-2 !text-neutral-content/60 uppercase">Projekt</span>
                 </li>
-                <li><a class="px-2 py-2">Neues Projekt...</a></li>
-                <li><a class="px-2 py-2">Speichern</a></li>
-                <li><a class="px-2 py-2">Exportieren...</a></li>
+                <li><a class="px-2 py-2 pointer-events-none text-neutral-content/80">Neues Projekt...</a></li>
+                <li><a class="px-2 py-2 pointer-events-none text-neutral-content/80">Speichern</a></li>
+                <li><a class="px-2 py-2 pointer-events-none text-neutral-content/80">Exportieren...</a></li>
             </ul>
         </div>
     </div>

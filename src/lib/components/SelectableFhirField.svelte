@@ -6,7 +6,7 @@
 
 <script lang="ts">
     import fhirResourceTypeMetadata from '$lib/generated/fhirResourceTypeMetadata.json';
-    import type { FhirDefinition, FhirResourceField } from '$lib/fhir/FhirMetadata';
+    import type { FhirDefinition, FhirResourceField } from '$lib/fhir/FhirMetadata.js';
     import { t } from 'svelte-i18n';
     import { capitalCase } from 'change-case';
     import { convertI18nFhirDefinitionPath, convertI18nFhirFieldPath } from '$lib/fhir/fhirI18nUtil.js';
@@ -21,6 +21,9 @@
     import chevronRightIcon from '@iconify/icons-fa6-solid/chevron-right';
     import chevronDownIcon from '@iconify/icons-fa6-solid/chevron-down';
     import { slide } from 'svelte/transition';
+    import type { DaTreFoEditorContext } from '$lib/types/component/DaTreFoEditor';
+    import { getContext } from 'svelte';
+    import { EDITOR_CONTEXT } from '$lib/util/ContextKey';
 
     export let documentId: string;
     export let resourceType: FhirResourceType;
@@ -29,6 +32,7 @@
     export let fieldPath: string;
     export let depth = 0;
 
+    const editor: DaTreFoEditorContext = getContext(EDITOR_CONTEXT);
     const fhirDefinitions: Record<string, FhirDefinition> = fhirResourceTypeMetadata.definitions;
 
     let selection: DaTreFoSelection;
@@ -72,7 +76,6 @@
     }
 
     function _updateHover(event: MouseEvent) {
-        console.log('updateHover');
         event.stopPropagation();
 
         if (event.type === 'mouseleave' || !event.target) {
@@ -104,7 +107,7 @@
         <div
             class="mr-2 {field.type === 'definition' && (hovered || expanded)
                 ? 'opacity-100'
-                : 'opacity-0 pointer-events-none'}"
+                : (field.type === 'definition' ? 'opacity-50' : 'opacity-0') + ' pointer-events-none'}"
         >
             <Button
                 btnStyle="ghost"
@@ -145,7 +148,14 @@
                     {/if}
                 </div>
                 {#if hovered}
-                    <Button size="xs" btnStyle="ghost" class="normal-case ">Pseudonymisierungsoptionen</Button>
+                    <Button
+                        size="xs"
+                        btnStyle="ghost"
+                        class="normal-case"
+                        on:click={() => editor.showModal('selectionOptions', documentId, fieldPath, field)}
+                    >
+                        Pseudonymisierungsoptionen
+                    </Button>
                 {/if}
             </div>
             {#if descriptionVisible}

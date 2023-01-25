@@ -64,9 +64,13 @@
 
         if (type === 'select') {
             classes = classnames(className, 'select', {
-                select: type === 'select',
                 'select-bordered': inputStyle === 'bordered',
                 'select-ghost': inputStyle === 'ghost'
+            });
+        } else {
+            classes = classnames(className, 'input', {
+                'input-bordered': inputStyle === 'bordered',
+                'input-ghost': inputStyle === 'ghost'
             });
         }
     }

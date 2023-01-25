@@ -33,7 +33,7 @@ export interface FhirDefinition {
 
 export interface FhirResourceMetadata {
     name: FhirResourceType;
-    fields: ResourceField[];
+    fields: FhirResourceField[];
 }
 
 export type FhirResourceMetadataMap = Partial<Record<FhirResourceType, FhirResourceMetadata>> & {

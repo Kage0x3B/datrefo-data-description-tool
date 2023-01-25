@@ -9,17 +9,19 @@ export enum AggregationFunction {
     CATEGORY = 'category'
 }
 
-interface MappingParameters {
+export interface MappingParameters {
     timeShift?: {
         shift: number;
         timeUnit: 'year' | 'month' | 'week';
     };
+    dateRounding?: undefined;
     codeRounding?: {
         precision: number;
     };
+    age?: undefined;
 }
 
-interface AggregationParameters {
+export interface AggregationParameters {
     category?: {
         lessThan?: number;
         moreThan?: number;
@@ -29,7 +31,7 @@ interface AggregationParameters {
     }[];
 }
 
-interface DaTreFoSelectionOptions {
+export interface DaTreFoSelectionOptions {
     mappingFunction: MappingFunction | MappingFunction[];
     mappingParameters: MappingParameters;
     aggregationFunction: AggregationFunction | AggregationFunction[];

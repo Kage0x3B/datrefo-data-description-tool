@@ -11,13 +11,15 @@
     import { EDITOR_CONTEXT } from '$lib/util/ContextKey';
     import DocumentList from '$lib/components/documentList/DocumentList.svelte';
     import MainMenu from '$lib/components/MainMenu.svelte';
-    import type { ModalType } from '$lib/components/modal/ModalType';
+    import type { ModalType, ModalTypeNames, SelectionOptionsModalType } from '$lib/components/modal/ModalType';
     import CreateDocumentModal from '$lib/components/modal/CreateDocumentModal.svelte';
+    import SelectionOptionsModal from '$lib/components/modal/SelectionOptionsModal.svelte';
 
     let tabContainer: TabContainerType;
     let tabs: EditorTabData[] = [];
 
     let createDocumentModal: ModalType;
+    let selectionOptionsModal: SelectionOptionsModalType;
 
     function createDocument(resourceType: FhirResourceType): InternalDocument {
         let idCounter = 1;
@@ -77,9 +79,11 @@
         tabs = tabs.filter((tab) => tab.id !== tabId);
     }
 
-    function showModal(type: 'createDocument'): void {
+    function showModal(type: ModalTypeNames, ...args: unknown[]): void {
         if (type === 'createDocument') {
             createDocumentModal.open();
+        } else if (type === 'selectionOptions') {
+            selectionOptionsModal.open(...args);
         } else {
             console.warn(`Invalid modal type ${type}`);
         }
@@ -112,3 +116,4 @@
     </main>
 </div>
 <CreateDocumentModal bind:this={createDocumentModal} />
+<SelectionOptionsModal bind:this={selectionOptionsModal} />
