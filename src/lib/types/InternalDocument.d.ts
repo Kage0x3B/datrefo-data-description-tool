@@ -1,11 +1,18 @@
-import { DaTreFoCondition } from '$lib/types/datrefoFormat/DaTreFoCondition';
+import { DaTreFoCondition, DaTreFoOperatorCondition } from '$lib/types/datrefoFormat/DaTreFoCondition';
 import { FhirResourceType } from '$lib/types/datrefoFormat/DaTreFoDocument';
-import { DaTreFoSelection, DaTreFoSelectionOptions } from '$lib/types/datrefoFormat/DaTreFoSelection';
+import { DaTreFoSelection } from '$lib/types/datrefoFormat/DaTreFoSelection';
 
 export interface InternalDocument {
     id: string;
     displayName?: string;
     resourceType: FhirResourceType;
     selections: Record<string, DaTreFoSelection>;
-    condition: DaTreFoCondition[];
+    condition: InternalCondition[];
+}
+
+export type InternalCondition = DaTreFoCondition | InternalCombinedCondition;
+
+export interface InternalCombinedCondition {
+    basePath: string;
+    conditions: DaTreFoOperatorCondition[];
 }

@@ -3,6 +3,8 @@ import { get } from 'svelte/store';
 import type { InternalDocument } from '$lib/types/InternalDocument';
 import type { DaTreFoDocument, DaTreFoRecursiveSelection } from '$lib/types/datrefoFormat/DaTreFoDocument';
 import JSZip from 'jszip';
+import type { DaTreFoCondition } from '$lib/types/datrefoFormat/DaTreFoCondition';
+import { isCombinedCondition } from '$lib/components/conditions/conditionUtil';
 
 export interface ExportOptions {
     documentContainer: 'json' | 'zip';
@@ -25,11 +27,7 @@ export async function exportProject(options: ExportOptions): Promise<{ data: Blo
             data: await exportProjectZip(exportedDocuments, options)
         };
     } else {
-        const exportedJson = JSON.stringify(
-            Object.values(exportedDocuments),
-            null,
-            options.jsonFormat === 'prettified' ? 2 : 0
-        );
+        const exportedJson = JSON.stringify(Object.values(exportedDocuments), null, options.jsonFormat === 'prettified' ? 2 : 0);
         return {
             fileName: 'daTreFoDataDescriptionExport.json',
             data: new Blob([exportedJson], { type: 'application/json' })
@@ -41,10 +39,7 @@ async function exportProjectZip(documents: Record<string, DaTreFoDocument>, opti
     const projectZip = new JSZip();
 
     for (const [documentId, document] of Object.entries(documents)) {
-        projectZip.file(
-            `${documentId}.json`,
-            JSON.stringify(document, null, options.jsonFormat === 'prettified' ? 2 : 0)
-        );
+        projectZip.file(`${documentId}.json`, JSON.stringify(document, null, options.jsonFormat === 'prettified' ? 2 : 0));
     }
 
     return await projectZip.generateAsync({
@@ -57,7 +52,7 @@ function exportDocument(document: InternalDocument, options: ExportOptions): DaT
 
     return {
         resourceType: document.resourceType,
-        condition: document.condition,
+        condition: generateConditions(document, options),
         excludePatientCondition: [],
         ...selections
     };
@@ -71,6 +66,25 @@ function generateSelections(document: InternalDocument, options: ExportOptions):
     }
 
     return selections;
+}
+
+function generateConditions(document: InternalDocument, options: ExportOptions): DaTreFoCondition[] {
+    const exportConditions: DaTreFoCondition[] = [];
+
+    for (const condition of document.condition) {
+        if (isCombinedCondition(condition)) {
+            for (const subCondition of condition.conditions) {
+                exportConditions.push({
+                    ...subCondition,
+                    leftOperand: condition.basePath + '.' + subCondition.leftOperand
+                });
+            }
+        } else {
+            exportConditions.push(condition);
+        }
+    }
+
+    return exportConditions;
 }
 
 /**

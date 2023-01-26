@@ -1,8 +1,98 @@
 {
     "selection": {
+        "aggregationFunction": {
+            "category": {
+                "name": "Kategorie",
+                "label": "Beschreibung",
+                "minValue": "Min. Wert (inklusiv)",
+                "maxValue": "Max. Wert (exklusiv)",
+                "warning": {
+                    "noCategories": "Leere Kategorienliste",
+                    "missingLabel": "Kategoriebezeichnungen dürfen nicht leer sein",
+                    "invalidRange": "Die Kategorie \"{label}\" kann keinen Minimalwert haben, der größer ist als der Maximalwert.",
+                    "undefinedValue": "Nur die erste und die letzte Kategorie können offene Grenzen haben"
+                }
+            }
+        },
         "mappingFunction": {
             "age": {
                 "name": "Alter"
+            }
+        }
+    },
+    "condition": {
+        "operator": {
+            "eq": {
+                "name": "Gleich",
+                "sentencePart": "ist gleich",
+                "sentence": "{left} ist gleich {right}",
+                "shorthand": "="
+            },
+            "neq": {
+                "name": "Ungleich",
+                "sentencePart": "ist nicht gleich",
+                "sentence": "{left} ist nicht gleich {right}",
+                "shorthand": "!="
+            },
+            "lt": {
+                "name": "Kleiner als",
+                "sentencePart": "ist kleiner als",
+                "sentence": "{left} ist kleiner als {right}",
+                "shorthand": "="
+            },
+            "lteq": {
+                "name": "Kleiner oder gleich",
+                "sentencePart": "ist kleiner oder gleich",
+                "sentence": "{left} ist kleiner oder gleich {right}",
+                "shorthand": "<="
+            },
+            "gt": {
+                "name": "Größer als",
+                "sentencePart": "ist größer als",
+                "sentence": "{left} ist größer als {right}",
+                "shorthand": ">"
+            },
+            "gteq": {
+                "name": "Größer oder gleich",
+                "sentencePart": "ist größer oder gleich",
+                "sentence": "{left} ist größer oder gleich {right}",
+                "shorthand": ">="
+            },
+            "hasPart": {
+                "name": "Hat einen Teil",
+                "sentencePart": "hat einen Teil von",
+                "sentence": "{left} hat einen Teil von {right}",
+                "shorthand": "Hat einen Teil"
+            },
+            "isAllOf": {
+                "name": "Ist alles von",
+                "sentencePart": "ist alles von",
+                "sentence": "{left} ist alles von {right}",
+                "shorthand": "Ist alles von"
+            },
+            "isNoneOf": {
+                "name": "Ist nichts von",
+                "sentencePart": "ist nichts von",
+                "sentence": "{left} is none of {right}",
+                "shorthand": "Ist nichts von"
+            },
+            "isA": {
+                "name": "Ist ein",
+                "sentencePart": "ist ein",
+                "sentence": "{left} ist ein {right}",
+                "shorthand": "Ist ein"
+            },
+            "isAnyOf": {
+                "name": "Ist eins von",
+                "sentencePart": "ist eins von",
+                "sentence": "{left} ist eins von {right}",
+                "shorthand": "Ist eins von"
+            },
+            "isPartOf": {
+                "name": "Ist Teil von",
+                "sentencePart": "ist ein Teil von",
+                "sentence": "{left} ist ein Teil von {right}",
+                "shorthand": "Ist Teil von"
             }
         }
     },

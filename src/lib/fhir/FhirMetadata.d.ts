@@ -28,7 +28,7 @@ export interface FhirResourceField {
 
 export interface FhirDefinition {
     name: string;
-    fields: ResourceField[];
+    fields: FhirResourceField[];
 }
 
 export interface FhirResourceMetadata {

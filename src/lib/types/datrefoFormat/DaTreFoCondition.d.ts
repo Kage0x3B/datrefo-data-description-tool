@@ -1,17 +1,5 @@
-type ConditionOperator =
-    | 'eq'
-    | 'lt'
-    | 'hasPart'
-    | 'isAllOf'
-    | 'isNoneOf'
-    | 'isA'
-    | 'neq'
-    | 'isAnyOf'
-    | 'lteq'
-    | 'gt'
-    | 'isPartOf'
-    | 'gteq';
-type LogicalConditionOperand = 'or' | 'xone' | 'and';
+type ConditionOperator = 'eq' | 'lt' | 'hasPart' | 'isAllOf' | 'isNoneOf' | 'isA' | 'neq' | 'isAnyOf' | 'lteq' | 'gt' | 'isPartOf' | 'gteq';
+type LogicalConditionOperator = 'or' | 'xone' | 'and';
 
 /**
  * @see https://www.w3.org/TR/odrl-model/#x2-5-1-constraint-class
@@ -27,7 +15,7 @@ interface DaTreFoOperatorCondition {
  */
 interface DaTreFoLogicalCondition {
     operand: DaTreFoCondition[];
-    operator: LogicalConditionOperand;
+    operator: LogicalConditionOperator;
 }
 
 export type DaTreFoCondition = DaTreFoOperatorCondition | DaTreFoLogicalCondition;

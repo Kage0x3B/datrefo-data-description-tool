@@ -9,7 +9,13 @@ export const documents: Writable<Record<string, InternalDocument>> = writable({
     Medication1: {
         id: 'Medication1',
         resourceType: FhirResourceType.MEDICATION,
-        condition: [],
+        condition: [
+            {
+                leftOperand: 'code',
+                operator: 'eq',
+                rightOperand: '1337'
+            }
+        ],
         selections: {}
     },
     Patient1: {

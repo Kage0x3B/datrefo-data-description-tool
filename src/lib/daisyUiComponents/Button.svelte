@@ -10,7 +10,7 @@
     export let block = false;
     export let wide = false;
     export let loading = false;
-    export let color: ThemeColor = 'secondary';
+    export let color: ThemeColor = 'primary';
     export let disabled = false;
     export let href = '';
     export let element = undefined;
@@ -44,26 +44,11 @@
 </script>
 
 {#if href}
-    <a
-        {...$$restProps}
-        class={classes}
-        disabled={disabled ? true : undefined}
-        bind:this={element}
-        on:click
-        {href}
-        aria-label={ariaLabel}
-    >
+    <a {...$$restProps} class={classes} disabled={disabled ? true : undefined} bind:this={element} on:click {href} aria-label={ariaLabel}>
         <slot />
     </a>
 {:else}
-    <button
-        {...$$restProps}
-        class={classes}
-        disabled={disabled ? true : undefined}
-        bind:this={element}
-        on:click
-        aria-label={ariaLabel}
-    >
+    <button {...$$restProps} class={classes} disabled={disabled ? true : undefined} bind:this={element} on:click aria-label={ariaLabel}>
         <slot />
     </button>
 {/if}

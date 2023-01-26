@@ -3,6 +3,7 @@ import { FhirFieldPrimitiveType } from '$lib/fhir/FhirFieldPrimitiveType.js';
 import type { AggregationParameters, MappingParameters } from '$lib/types/datrefoFormat/DaTreFoSelection';
 import { AggregationFunction, MappingFunction } from '$lib/types/datrefoFormat/DaTreFoSelection';
 import TimeShiftMappingFunctionComponent from '$lib/components/selectionOptions/TimeShiftMappingFunctionComponent.svelte';
+import CategoryAggregationFunction from '$lib/components/selectionOptions/CategoryAggregationFunction.svelte';
 
 const numberTypes: FhirFieldPrimitiveType[] = [
     FhirFieldPrimitiveType.INTEGER,
@@ -19,11 +20,7 @@ const dateTimeTypes: FhirFieldPrimitiveType[] = [
     FhirFieldPrimitiveType.INSTANT
 ];
 
-const dateTypes: FhirFieldPrimitiveType[] = [
-    FhirFieldPrimitiveType.DATE,
-    FhirFieldPrimitiveType.DATE_TIME,
-    FhirFieldPrimitiveType.INSTANT
-];
+const dateTypes: FhirFieldPrimitiveType[] = [FhirFieldPrimitiveType.DATE, FhirFieldPrimitiveType.DATE_TIME, FhirFieldPrimitiveType.INSTANT];
 
 export const aggregationFunctionInfo: Record<
     AggregationFunction,
@@ -39,7 +36,8 @@ export const aggregationFunctionInfo: Record<
         },
         createDefaultParameters(): AggregationParameters['category'] {
             return [];
-        }
+        },
+        component: CategoryAggregationFunction
     }
 };
 
@@ -90,3 +88,25 @@ export const mappingFunctionInfo: Record<
         }
     }
 };
+
+export function isAnyPseudonymizationFunctionAvailable(field: FhirResourceField): boolean {
+    return (
+        Object.values(aggregationFunctionInfo).some((func) => func.isUsableOnField(field)) ||
+        Object.values(mappingFunctionInfo).some((func) => func.isUsableOnField(field))
+    );
+}
+
+export function getAvailableAggregationFunctions(
+    field: FhirResourceField,
+    currentAggregationFunctions: AggregationFunction[] = []
+): AggregationFunction[] {
+    return (Object.keys(aggregationFunctionInfo) as AggregationFunction[]).filter(
+        (func) => !currentAggregationFunctions.includes(func) && aggregationFunctionInfo[func].isUsableOnField(field)
+    );
+}
+
+export function getAvailableMappingFunctions(field: FhirResourceField, currentMappingFunctions: MappingFunction[] = []): MappingFunction[] {
+    return (Object.keys(mappingFunctionInfo) as MappingFunction[]).filter(
+        (func) => !currentMappingFunctions.includes(func) && mappingFunctionInfo[func].isUsableOnField(field)
+    );
+}

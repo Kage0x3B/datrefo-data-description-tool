@@ -1,8 +1,105 @@
 {
+    "warning": "Warning",
+    "error": "Error",
     "selection": {
+        "aggregationFunction": {
+            "category": {
+                "name": "Category",
+                "label": "Label",
+                "minValue": "Min. Value (inclusive)",
+                "maxValue": "Max. Value (exclusive)",
+                "warning": {
+                    "noCategories": "Empty category list",
+                    "missingLabel": "Category labels can't be empty",
+                    "invalidRange": "Category \"{label}\" can't have a min. value greater than the max. value",
+                    "undefinedValue": "Only the first and last category can have open boundaries"
+                }
+            }
+        },
         "mappingFunction": {
             "age": {
-                "name": "Alter"
+                "name": "Age"
+            }
+        }
+    },
+    "codeSystem": {
+        "icd10": "ICD-10",
+        "acme": "ACME Lab Result Code",
+        "snomed": "SNOMED CT"
+    },
+    "condition": {
+        "operator": {
+            "eq": {
+                "name": "Equal",
+                "sentencePart": "equals",
+                "sentence": "{left} equals {right}",
+                "shorthand": "="
+            },
+            "neq": {
+                "name": "Not Equal",
+                "sentencePart": "doesn't equal",
+                "sentence": "{left} doesn't equal {right}",
+                "shorthand": "!="
+            },
+            "lt": {
+                "name": "Less Than",
+                "sentencePart": "is less than",
+                "sentence": "{left} is less than {right}",
+                "shorthand": "="
+            },
+            "lteq": {
+                "name": "Less Than Or Equal",
+                "sentencePart": "is less than or equal",
+                "sentence": "{left} is less than or equal {right}",
+                "shorthand": "<="
+            },
+            "gt": {
+                "name": "Greater Than",
+                "sentencePart": "is greater than",
+                "sentence": "{left} is greater than {right}",
+                "shorthand": ">"
+            },
+            "gteq": {
+                "name": "Greater Than Or Equal",
+                "sentencePart": "is greater than or equal",
+                "sentence": "{left} is greater than or equal {right}",
+                "shorthand": ">="
+            },
+            "hasPart": {
+                "name": "Has Part",
+                "sentencePart": "has part of",
+                "sentence": "{left} has part of {right}",
+                "shorthand": "Has Part"
+            },
+            "isAllOf": {
+                "name": "Is All Of",
+                "sentencePart": "is all of",
+                "sentence": "{left} is all of {right}",
+                "shorthand": "Is All Of"
+            },
+            "isNoneOf": {
+                "name": "Is None Of",
+                "sentencePart": "is none of",
+                "sentence": "{left} is none of {right}",
+                "shorthand": "Is None Of"
+            },
+            "isA": {
+                "name": "Is a",
+                "sentencePart": "is a",
+                "sentence": "{left} is a {right}",
+                "shorthand": "Is a"
+            },
+            "isAnyOf": {
+                "name": "Is Any Of",
+                "sentencePart": "is any of",
+                "sentence": "{left} is any of {right}",
+                "shorthand": "Is Any Of"
+            },
+            "isPartOf": {
+                "name": "Is Part Of",
+                "sentencePart": "is part of",
+                "sentence": "{left} is part of {right}",
+                "shorthand": "Is Part Of"
             }
         }
     }

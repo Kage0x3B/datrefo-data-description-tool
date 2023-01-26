@@ -2,7 +2,7 @@
     import Modal from '$lib/daisyUiComponents/Modal.svelte';
     import Button from '$lib/daisyUiComponents/Button.svelte';
     import type { DaTreFoEditorContext } from '$lib/types/component/DaTreFoEditor';
-    import { getContext } from 'svelte';
+    import { getContext, onMount } from 'svelte';
     import { EDITOR_CONTEXT } from '$lib/util/ContextKey';
     import type { DaTreFoSelectionOptions } from '$lib/types/datrefoFormat/DaTreFoSelection';
     import { AggregationFunction, MappingFunction } from '$lib/types/datrefoFormat/DaTreFoSelection';
@@ -10,10 +10,16 @@
     import type { FhirResourceField } from '$lib/fhir/FhirMetadata';
     import Input from '$lib/daisyUiComponents/Input.svelte';
     import FormControl from '$lib/daisyUiComponents/FormControl.svelte';
-    import { aggregationFunctionInfo, mappingFunctionInfo } from '$lib/components/selectionOptions/selectionOptions.js';
+    import {
+        aggregationFunctionInfo,
+        getAvailableAggregationFunctions,
+        getAvailableMappingFunctions,
+        mappingFunctionInfo
+    } from '$lib/components/selectionOptions/selectionOptions.js';
     import { capitalCase } from 'change-case';
     import Icon from '@iconify/svelte';
     import plusIcon from '@iconify/icons-fa6-solid/plus';
+    import { FhirFieldPrimitiveType } from '$lib/fhir/FhirFieldPrimitiveType';
 
     const editor: DaTreFoEditorContext = getContext(EDITOR_CONTEXT);
 
@@ -34,19 +40,9 @@
     let newMappingFunction: MappingFunction | '' = '';
 
     $: availableAggregationFunctions = documentId
-        ? Object.keys(aggregationFunctionInfo).filter(
-              (func) =>
-                  !selectionOptions!.aggregationFunction.includes(func as any) &&
-                  aggregationFunctionInfo[func].isUsableOnField(selectionField!)
-          )
+        ? getAvailableAggregationFunctions(selectionField!, selectionOptions!.aggregationFunction)
         : [];
-    $: availableMappingFunctions = documentId
-        ? Object.keys(mappingFunctionInfo).filter(
-              (func) =>
-                  !selectionOptions!.mappingFunction.includes(func as any) &&
-                  mappingFunctionInfo[func].isUsableOnField(selectionField!)
-          )
-        : [];
+    $: availableMappingFunctions = documentId ? getAvailableMappingFunctions(selectionField!, selectionOptions!.mappingFunction) : [];
 
     export function open(_documentId: string, _selectionFieldPath: string, _selectionField: FhirResourceField) {
         documentId = _documentId;
@@ -137,7 +133,18 @@
                 <div class="border border-gray-300 rounded mb-2">
                     {#each selectionOptions.aggregationFunction as func, i}
                         <div class="p-2 {i !== selectionOptions.aggregationFunction.length - 1 ? 'border-b' : ''}">
-                            {func}
+                            {#if aggregationFunctionInfo[func].component}
+                                <svelte:component
+                                    this={aggregationFunctionInfo[func].component}
+                                    bind:parameters={selectionOptions.aggregationParameters[func]}
+                                    field={selectionField}
+                                />
+                            {:else}
+                                <span
+                                    >{capitalCase(func)}
+                                    <span class="text-base-content/80"> (keine weiteren Einstellungsmöglichkeiten)</span></span
+                                >
+                            {/if}
                         </div>
                     {/each}
                 </div>
@@ -145,13 +152,7 @@
             {#if availableAggregationFunctions.length}
                 <div class="flex flex-row items-end w-1/2">
                     <FormControl label="Neue Aggregation Funktion">
-                        <Input
-                            type="select"
-                            inputStyle="bordered"
-                            inputSize="xs"
-                            bind:value={newAggregationFunction}
-                            class="flex-1 mx-2"
-                        >
+                        <Input type="select" inputStyle="bordered" inputSize="xs" bind:value={newAggregationFunction} class="flex-1 mx-2">
                             <option value="" disabled selected>Aggregationsmethode auswählen...</option>
                             {#each availableAggregationFunctions as aggregationFunction}
                                 <option value={aggregationFunction}>{capitalCase(aggregationFunction)}</option>
@@ -164,8 +165,7 @@
                 </div>
             {:else}
                 <span class="text-base-content/80">
-                    Für dieses Feld sind keine{selectionOptions.aggregationFunction.length ? ' weiteren' : ''} Aggregationsfunktionen
-                    verfügbar.
+                    Für dieses Feld sind keine{selectionOptions.aggregationFunction.length ? ' weiteren' : ''} Aggregationsfunktionen verfügbar.
                 </span>
             {/if}
         </div>
@@ -180,13 +180,12 @@
                                 <svelte:component
                                     this={mappingFunctionInfo[func].component}
                                     bind:parameters={selectionOptions.mappingParameters[func]}
+                                    field={selectionField}
                                 />
                             {:else}
                                 <span
                                     >{capitalCase(func)}
-                                    <span class="text-base-content/80">
-                                        (keine weiteren Einstellungsmöglichkeiten)</span
-                                    ></span
+                                    <span class="text-base-content/80"> (keine weiteren Einstellungsmöglichkeiten)</span></span
                                 >
                             {/if}
                         </div>
@@ -196,13 +195,7 @@
             {#if availableMappingFunctions.length}
                 <div class="flex flex-row items-end w-1/2">
                     <FormControl label="Neue Mapping Funktion">
-                        <Input
-                            type="select"
-                            inputStyle="bordered"
-                            inputSize="xs"
-                            bind:value={newMappingFunction}
-                            class="flex-1 mx-2"
-                        >
+                        <Input type="select" inputStyle="bordered" inputSize="xs" bind:value={newMappingFunction} class="flex-1 mx-2">
                             <option value="" disabled selected>Mappingmethode auswählen...</option>
                             {#each availableMappingFunctions as mappingFunction}
                                 <option value={mappingFunction}>{capitalCase(mappingFunction)}</option>
@@ -215,8 +208,7 @@
                 </div>
             {:else}
                 <span class="text-base-content/80">
-                    Für dieses Feld sind keine{selectionOptions.mappingFunction.length ? ' weiteren' : ''} Mappingfunktionen
-                    verfügbar.
+                    Für dieses Feld sind keine{selectionOptions.mappingFunction.length ? ' weiteren' : ''} Mappingfunktionen verfügbar.
                 </span>
             {/if}
         </div>

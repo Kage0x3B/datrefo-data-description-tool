@@ -17,7 +17,7 @@
     import circleQuestionIcon from '@iconify/icons-fa6-solid/circle-question';
     import Button from '$lib/daisyUiComponents/Button.svelte';
     import Input from '$lib/daisyUiComponents/Input.svelte';
-    import { debounceLeading } from '$lib/util/util';
+    import { debounceLeading, enumValues } from '$lib/util/util';
     import chevronRightIcon from '@iconify/icons-fa6-solid/chevron-right';
     import chevronDownIcon from '@iconify/icons-fa6-solid/chevron-down';
     import { slide } from 'svelte/transition';
@@ -25,6 +25,12 @@
     import { getContext } from 'svelte';
     import { EDITOR_CONTEXT } from '$lib/util/ContextKey';
     import type { MessageFormatter } from '$lib/types/MessageFormatter';
+    import { isAnyPseudonymizationFunctionAvailable } from '$lib/components/selectionOptions/selectionOptions';
+    import ButtonGroup from '$lib/daisyUiComponents/ButtonGroup.svelte';
+    import { FhirFieldPrimitiveType } from '$lib/fhir/FhirFieldPrimitiveType';
+    import { isFieldTypeCombinedCondition } from '$lib/fhir/fhirUtil';
+    import type { InternalCombinedCondition } from '$lib/types/InternalDocument';
+    import { createCondition } from '$lib/components/conditions/conditionUtil';
 
     export let documentId: string;
     export let resourceType: FhirResourceType;
@@ -37,9 +43,7 @@
 
     let selection: DaTreFoSelection;
     $: selection = $documents[documentId].selections[fieldPath];
-    $: indirectlySelected = Object.keys($documents[documentId].selections).some(
-        (path) => fieldPath.startsWith(path) && fieldPath !== path
-    );
+    $: indirectlySelected = Object.keys($documents[documentId].selections).some((path) => fieldPath.startsWith(path) && fieldPath !== path);
     $: isSelected = !!selection || indirectlySelected;
 
     let expanded = false;
@@ -48,32 +52,36 @@
     $: if (!hovered) {
         descriptionVisible = false;
     }
+    $: showPseudonomyzationButton = isAnyPseudonymizationFunctionAvailable(field);
+    $: showConditionButton = field.type !== 'definition';
 
-    $: fieldDisplayName =
-        $t(convertI18nFhirFieldPath(resourceType, fieldPath) + '.name', { default: '' }) ||
-        (field.definition
-            ? $t(convertI18nFhirDefinitionPath(field.definition, field.path) + '.name', { default: '' })
-            : '') ||
-        capitalCase(field.name);
-    $: fieldDescription =
-        $t(convertI18nFhirFieldPath(resourceType, fieldPath) + '.description', { default: '' }) ||
-        (field.definition
-            ? $t(convertI18nFhirDefinitionPath(field.definition, field.path) + '.description', { default: '' })
-            : '');
-    $: fieldType = getFieldType($t, resourceType, field.path, fieldPath);
-
-    function getFieldType(
-        translate: MessageFormatter,
+    function getTranslationProperty(
+        property: 'name' | 'description',
+        t: MessageFormatter,
         resourceType: FhirResourceType,
-        fieldPath: string,
-        fullFieldPath: string
-    ): string {
+        field: FhirResourceField,
+        fullFieldPath: string,
+        defaultValue = ''
+    ) {
+        const fieldName = t(convertI18nFhirFieldPath(resourceType, field.path) + '.name', { default: '' });
+        const definitionName = field.definition
+            ? t(convertI18nFhirDefinitionPath(field.definition, fullFieldPath) + '.name', { default: '' })
+            : '';
+
+        return fieldName || definitionName || defaultValue;
+    }
+
+    function getFieldType(t: MessageFormatter, resourceType: FhirResourceType, field: FhirResourceField, fullFieldPath: string): string {
         if (field.definition) {
             return capitalCase(field.definition);
         }
 
         return capitalCase(field.type);
     }
+
+    $: fieldDisplayName = getTranslationProperty('name', $t, resourceType, field, fieldPath, capitalCase(field.name));
+    $: fieldDescription = getTranslationProperty('description', $t, resourceType, field, fieldPath);
+    $: fieldType = getFieldType($t, resourceType, field, fieldPath);
 
     function toggle() {
         if (indirectlySelected) {
@@ -109,6 +117,10 @@
     }
 
     const updateHover = debounceLeading(_updateHover, 50);
+
+    function addCondition() {
+        $documents[documentId].condition = [...$documents[documentId].condition, createCondition(field, fieldPath)];
+    }
 </script>
 
 <div
@@ -164,14 +176,28 @@
                     {/if}
                 </div>
                 {#if hovered}
-                    <Button
-                        size="xs"
-                        btnStyle="ghost"
-                        class="normal-case"
-                        on:click={() => editor.showModal('selectionOptions', documentId, fieldPath, field)}
-                    >
-                        Pseudonymisierungsoptionen
-                    </Button>
+                    <ButtonGroup>
+                        {#if showConditionButton}
+                            <Button size="xs" btnStyle="outline" color="warning" class="normal-case" on:click={addCondition}>
+                                Bedingung hinzufügen
+                            </Button>
+                        {/if}
+                        {#if showPseudonomyzationButton}
+                            <Button
+                                size="xs"
+                                btnStyle="outline"
+                                color="accent"
+                                class="normal-case"
+                                on:click={() => editor.showModal('selectionOptions', documentId, fieldPath, field)}
+                            >
+                                Pseudonymisierungsoptionen
+                            </Button>
+                        {:else}
+                            <Button size="xs" btnStyle="outline" color="accent" class="normal-case" disabled>
+                                Keine Pseudonymisierungsoptionen verfügbar
+                            </Button>
+                        {/if}
+                    </ButtonGroup>
                 {/if}
             </div>
             {#if descriptionVisible}
