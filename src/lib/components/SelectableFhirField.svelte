@@ -34,6 +34,7 @@
 
     export let documentId: string;
     export let resourceType: FhirResourceType;
+    export let containingDefinition = '';
     export let field: FhirResourceField;
     export let fieldPath: string;
     export let depth = 0;
@@ -63,9 +64,9 @@
         fullFieldPath: string,
         defaultValue = ''
     ) {
-        const fieldName = t(convertI18nFhirFieldPath(resourceType, field.path) + '.name', { default: '' });
-        const definitionName = field.definition
-            ? t(convertI18nFhirDefinitionPath(field.definition, fullFieldPath) + '.name', { default: '' })
+        const fieldName = t(convertI18nFhirFieldPath(resourceType, field.path) + '.' + property, { default: '' });
+        const definitionName = containingDefinition
+            ? t(convertI18nFhirDefinitionPath(containingDefinition, fullFieldPath) + '.' + property, { default: '' })
             : '';
 
         return fieldName || definitionName || defaultValue;
@@ -214,6 +215,7 @@
                     <svelte:self
                         {documentId}
                         {resourceType}
+                        containingDefinition={field.definition}
                         field={childField}
                         fieldPath={fieldPath + '.' + childField.name}
                         depth={depth + 1}

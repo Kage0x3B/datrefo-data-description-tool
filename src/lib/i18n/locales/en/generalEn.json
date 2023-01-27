@@ -25,7 +25,9 @@
     "codeSystem": {
         "icd10": "ICD-10",
         "acme": "ACME Lab Result Code",
-        "snomed": "SNOMED CT"
+        "snomed": "SNOMED CT",
+        "loinc": "Loinc",
+        "verificationStatus": "Verification Status"
     },
     "condition": {
         "operator": {

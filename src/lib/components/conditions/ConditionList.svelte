@@ -18,7 +18,6 @@
     }
 </script>
 
-{JSON.stringify(conditionList, null, 2)}
 {#each conditionList as condition}
     <div class="flex flex-row justify-between items-center mb-4">
         {#if hasOwnProperty(condition, 'leftOperand') || isCombinedCondition(condition)}

@@ -29,6 +29,6 @@
             </li>
         {/each}
     {:else}
-        Keine Dokumente angelegt
+        <li class="px-3 py-1 text-base-content/80">Keine Dokumente angelegt</li>
     {/each}
 </ul>

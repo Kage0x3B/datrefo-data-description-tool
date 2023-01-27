@@ -5,7 +5,7 @@
     import FormControl from '$lib/daisyUiComponents/FormControl.svelte';
     import type { DaTreFoOperatorCondition } from '$lib/types/datrefoFormat/DaTreFoCondition';
 
-    type CodeSystem = 'icd10' | 'acme' | 'snomed';
+    type CodeSystem = 'icd10' | 'acme' | 'snomed' | 'loinc' | 'verificationStatus';
     export let condition: InternalCombinedCondition;
     $: basePath = condition.basePath;
 
@@ -15,7 +15,9 @@
     const codeSystemUri: Record<CodeSystem, string> = {
         snomed: 'http://snomed.info/sct',
         icd10: 'http://fhir.de/CodeSystem/dimdi/icd-10-gm',
-        acme: 'https://acme.lab/resultcodes'
+        acme: 'https://acme.lab/resultcodes',
+        loinc: 'http://loinc.org',
+        verificationStatus: 'http://terminology.hl7.org/CodeSystem/condition-ver-status'
     };
     const reversedCodeSystems: Record<string, CodeSystem> = Object.fromEntries(
         Object.entries(codeSystemUri).map(([key, value]) => [value, key])

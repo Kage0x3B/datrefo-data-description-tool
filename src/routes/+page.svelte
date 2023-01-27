@@ -15,6 +15,8 @@
     import CreateDocumentModal from '$lib/components/modal/CreateDocumentModal.svelte';
     import SelectionOptionsModal from '$lib/components/modal/SelectionOptionsModal.svelte';
     import ExportModal from '$lib/components/modal/ExportModal.svelte';
+    import Icon from '@iconify/svelte';
+    import angleRightIcon from '@iconify/icons-fa6-solid/angle-right';
 
     let tabContainer: TabContainerType;
     let tabs: EditorTabData[] = [];
@@ -112,15 +114,26 @@
         <DocumentList />
     </aside>
     <main class="w-full sm:w-2/3 md:w-3/4 pt-1 px-2">
-        <TabContainer boxed bind:this={tabContainer} class="bg-gray-100 dark:bg-neutral">
-            {#each tabs as tab (tab.id)}
-                {#if tab.type === 'document'}
-                    <DocumentTab tabData={tab} />
-                {:else if tab.type === 'excludePatientConditions'}
-                    <ExcludeConditionsTab />
-                {/if}
-            {/each}
-        </TabContainer>
+        {#if tabs.length}
+            <TabContainer boxed bind:this={tabContainer} class="bg-gray-100 dark:bg-neutral">
+                {#each tabs as tab (tab.id)}
+                    {#if tab.type === 'document'}
+                        <DocumentTab tabData={tab} />
+                    {:else if tab.type === 'excludePatientConditions'}
+                        <ExcludeConditionsTab />
+                    {/if}
+                {/each}
+            </TabContainer>
+        {:else}
+            <div class="flex flex-col justify-center items-center p-16 bg-gray-100 dark:bg-neutral">
+                <h1 class="text-2xl font-bold">Willkommen im DaTreFo Forschungsdaten Beschreibungstool</h1>
+                <span>
+                    Um mit dem Auswählen der Forschungsdaten anzufangen, fügen Sie ein neues Dokument hinzu unter <kbd class="kbd"
+                        >Datei</kbd
+                    ><Icon icon={angleRightIcon} class="inline mx-2 text-base-content/80" /><kbd class="kbd">Neue Resource Datei...</kbd>
+                </span>
+            </div>
+        {/if}
     </main>
 </div>
 <CreateDocumentModal bind:this={createDocumentModal} />

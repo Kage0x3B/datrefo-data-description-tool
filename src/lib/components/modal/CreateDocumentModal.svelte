@@ -11,6 +11,7 @@
     import FormControl from '$lib/daisyUiComponents/FormControl.svelte';
     import type { FhirResourceMetadataMap } from '$lib/fhir/FhirMetadata';
     import fhirResourceTypeMetadataJson from '$lib/generated/fhirResourceTypeMetadata.json';
+    import { t } from 'svelte-i18n';
 
     const editor: DaTreFoEditorContext = getContext(EDITOR_CONTEXT);
     let fhirResourceTypeMetadata: FhirResourceMetadataMap = fhirResourceTypeMetadataJson;
@@ -63,19 +64,16 @@
     <FormControl label="Resource Typ" class="mb-3">
         <Input type="select" inputSize="sm" inputStyle="bordered" bind:value={resourceType}>
             {#each resourceTypeList as resourceType}
-                <option value={resourceType}>{capitalCase(resourceType)}</option>
+                <option value={resourceType}
+                    >{$t(`fhir.resourceType.${resourceType}.name`, {
+                        default: capitalCase(resourceType)
+                    })}</option
+                >
             {/each}
         </Input>
     </FormControl>
     <FormControl label="Alle Resourcentypen anzeigen" for="showAllCheckbox" labelInline>
-        <Input
-            type="checkbox"
-            id="showAllCheckbox"
-            bind:checked={showAll}
-            color="primary"
-            inputSize="xs"
-            class="mr-2"
-        />
+        <Input type="checkbox" id="showAllCheckbox" bind:checked={showAll} color="primary" inputSize="xs" class="mr-2" />
     </FormControl>
     <div class="modal-action">
         <Button on:click={() => (isOpen = false)} btnStyle="ghost">Abbrechen</Button>
