@@ -24,6 +24,7 @@
 
     const importantResourceTypes: FhirResourceType[] = [
         FhirResourceType.PATIENT,
+        FhirResourceType.CONDITION,
         FhirResourceType.MEDICATION,
         FhirResourceType.MEDICATION_ADMINISTRATION,
         FhirResourceType.MEDICATION_DISPENSE,
