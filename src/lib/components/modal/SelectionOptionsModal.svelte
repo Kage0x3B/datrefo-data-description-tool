@@ -124,7 +124,7 @@
 </script>
 
 <Modal {isOpen} {toggle} class="!w-11/12 !max-w-4xl">
-    <h1 class="text-xl font-bold mb-6">Pseudonymisierungsoptionen</h1>
+    <h1 class="text-xl font-bold mb-6">Verfremdungsoptionen</h1>
 
     {#if selectionOptions}
         <div class="mb-3">

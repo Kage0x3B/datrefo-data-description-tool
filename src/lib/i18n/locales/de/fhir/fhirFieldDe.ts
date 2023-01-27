@@ -5,8 +5,7 @@ export default {
         Patient: {
             gender: {
                 name: 'Geschlecht',
-                description:
-                    'Administratives Geschlecht - das Geschlecht, das der Patient für Verwaltungs- und Archivierungszwecke hat.'
+                description: 'Administratives Geschlecht - das Geschlecht, das der Patient für Verwaltungs- und Archivierungszwecke hat.'
             },
             birthDate: {
                 name: 'Geburtsdatum',
@@ -67,8 +66,7 @@ export default {
             },
             code: {
                 name: 'Code',
-                description:
-                    'Beschreibt, was beobachtet wurde. Manchmal wird dies auch als "Name" der Beobachtung bezeichnet.'
+                description: 'Beschreibt, was beobachtet wurde. Manchmal wird dies auch als "Name" der Beobachtung bezeichnet.'
             },
             effectiveDateTime: {
                 name: 'Datum des Inkrafttretens',
@@ -165,8 +163,7 @@ export default {
             },
             bodySite: {
                 name: 'Körperstelle',
-                description:
-                    'Gibt die Stelle am Körper des Probanden an, an der die Beobachtung gemacht wurde (d. h. die Zielstelle).'
+                description: 'Gibt die Stelle am Körper des Probanden an, an der die Beobachtung gemacht wurde (d. h. die Zielstelle).'
             },
             method: {
                 name: 'Verfahren',
@@ -176,6 +173,95 @@ export default {
                 name: 'Bestandteil',
                 description:
                     'Einige Beobachtungen haben mehrere Komponentenbeobachtungen. Diese Komponentenbeobachtungen werden als separate Codewertpaare ausgedrückt, die dieselben Attribute aufweisen. Beispiele hierfür sind systolische und diastolische Komponentenbeobachtungen für die Blutdruckmessung und Mehrfachkomponentenbeobachtungen für Genetikbeobachtungen.'
+            }
+        },
+        Condition: {
+            meta: {
+                description:
+                    'Die Metadaten über die Ressource. Dies ist Inhalt, der von der Infrastruktur gepflegt wird. Änderungen am Inhalt sind nicht immer mit Versionsänderungen der Ressource verbunden.'
+            },
+            implicitRules: {
+                description:
+                    'Ein Verweis auf eine Menge von Regeln, die bei der Konstruktion der Ressource befolgt wurden und die bei der Verarbeitung des Inhalts verstanden werden müssen. Oft handelt es sich hierbei um einen Verweis auf eine Implementierungsanleitung, die die speziellen Regeln zusammen mit anderen Profilen usw. definiert.'
+            },
+            language: { description: 'Die Basissprache, in der die Ressource geschrieben ist.' },
+            text: {
+                description:
+                    'Eine für den Menschen lesbare Erzählung, die eine Zusammenfassung der Ressource enthält und verwendet werden kann, um den Inhalt der Ressource einem Menschen darzustellen. Die Erzählung muss nicht alle strukturierten Daten codieren, aber sie muss ausreichende Details enthalten, um sie für einen Menschen "klinisch sicher" zu machen, indem er nur die Erzählung liest. Ressourcendefinitionen können festlegen, welche Inhalte in der Erzählung dargestellt werden sollen, um eine klinische Sicherheit sicherzustellen.'
+            },
+            contained: {
+                description:
+                    'Diese Ressourcen haben keine unabhängige Existenz neben der Ressource, die sie enthält - sie können weder unabhängig identifiziert werden, noch können sie ihren eigenen unabhängigen Transaktionsbereich haben. Sie dürfen nur dann eine Parameter-Ressource sein, wenn sie von einer Ressource referenziert wird, die Kontext/Bedeutung liefert.'
+            },
+            clinicalStatus: { description: 'The clinical status of the condition.' },
+            verificationStatus: {
+                description:
+                    'Der Verifizierungsstatus zur Unterstützung des klinischen Status der Bedingung.  Der Verifizierungsstatus bezieht sich auf den Zustand selbst, nicht auf ein bestimmtes Zustandsattribut.'
+            },
+            category: { description: 'Eine Kategorie, die dem medizinischen Zustand zugeordnet ist.' },
+            severity: {
+                description: 'Eine subjektive Einschätzung des Schweregrads der Erkrankung durch den Kliniker.'
+            },
+            code: { description: 'Identification of the condition, problem or diagnosis.' },
+            bodySite: { description: 'The anatomical location where this condition manifests itself.' },
+            subject: { description: 'Indicates the patient or group who the condition record is associated with.' },
+            encounter: {
+                description:
+                    'The Encounter during which this Condition was created or to which the creation of this record is tightly associated.'
+            },
+            onsetDateTime: {
+                description: 'Estimated or actual date or date-time  the condition began, in the opinion of the clinician.'
+            },
+            onsetAge: {
+                description: 'Estimated or actual date or date-time  the condition began, in the opinion of the clinician.'
+            },
+            onsetPeriod: {
+                description: 'Estimated or actual date or date-time  the condition began, in the opinion of the clinician.'
+            },
+            onsetRange: {
+                description: 'Estimated or actual date or date-time  the condition began, in the opinion of the clinician.'
+            },
+            onsetString: {
+                description: 'Estimated or actual date or date-time  the condition began, in the opinion of the clinician.'
+            },
+            abatementDateTime: {
+                description:
+                    'The date or estimated date that the condition resolved or went into remission. This is called "abatement" because of the many overloaded connotations associated with "remission" or "resolution" - Some conditions, such as chronic conditions, are never really resolved, but they can abate.'
+            },
+            abatementAge: {
+                description:
+                    'The date or estimated date that the condition resolved or went into remission. This is called "abatement" because of the many overloaded connotations associated with "remission" or "resolution" - Some conditions, such as chronic conditions, are never really resolved, but they can abate.'
+            },
+            abatementPeriod: {
+                description:
+                    'The date or estimated date that the condition resolved or went into remission. This is called "abatement" because of the many overloaded connotations associated with "remission" or "resolution" - Some conditions, such as chronic conditions, are never really resolved, but they can abate.'
+            },
+            abatementRange: {
+                description:
+                    'The date or estimated date that the condition resolved or went into remission. This is called "abatement" because of the many overloaded connotations associated with "remission" or "resolution" - Some conditions, such as chronic conditions, are never really resolved, but they can abate.'
+            },
+            abatementString: {
+                description:
+                    'The date or estimated date that the condition resolved or went into remission. This is called "abatement" because of the many overloaded connotations associated with "remission" or "resolution" - Some conditions, such as chronic conditions, are never really resolved, but they can abate.'
+            },
+            recordedDate: {
+                description:
+                    'The recordedDate represents when this particular Condition record was created in the system, which is often a system-generated date.'
+            },
+            participant: {
+                description: 'Indicates who or what participated in the activities related to the condition and how they were involved.'
+            },
+            stage: {
+                description:
+                    'A simple summary of the stage such as "Stage 3" or "Early Onset". The determination of the stage is disease-specific, such as cancer, retinopathy of prematurity, kidney diseases, Alzheimer\'s, or Parkinson disease.'
+            },
+            evidence: {
+                description:
+                    "Supporting evidence / manifestations that are the basis of the Condition's verification status, such as evidence that confirmed or refuted the condition."
+            },
+            note: {
+                description:
+                    'Additional information about the Condition. This is a general notes/comments entry  for description of the Condition, its diagnosis and prognosis.'
             }
         }
     },

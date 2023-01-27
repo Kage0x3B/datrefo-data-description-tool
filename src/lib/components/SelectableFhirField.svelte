@@ -191,11 +191,11 @@
                                 class="normal-case"
                                 on:click={() => editor.showModal('selectionOptions', documentId, fieldPath, field)}
                             >
-                                Pseudonymisierungsoptionen
+                                Verfremden
                             </Button>
                         {:else}
                             <Button size="xs" btnStyle="outline" color="accent" class="normal-case" disabled>
-                                Keine Pseudonymisierungsoptionen verfügbar
+                                Keine Verfremdungsoptionen verfügbar
                             </Button>
                         {/if}
                     </ButtonGroup>
