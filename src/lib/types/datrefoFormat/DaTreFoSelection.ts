@@ -6,15 +6,18 @@ export enum MappingFunction {
 }
 
 export enum AggregationFunction {
-    CATEGORY = 'category'
+    CATEGORY = 'category',
+    AVERAGE = 'average'
 }
 
 export interface MappingParameters {
     timeShift?: {
         shift: number;
-        timeUnit: 'year' | 'month' | 'week';
+        timeUnit: 'year' | 'month' | 'week' | 'day' | 'hour';
     };
-    dateRounding?: undefined;
+    dateRounding?: {
+        timeUnit: 'year' | 'month' | 'week' | 'day' | 'hour';
+    };
     codeRounding?: {
         precision: number;
     };
@@ -23,12 +26,15 @@ export interface MappingParameters {
 
 export interface AggregationParameters {
     category?: {
-        lessThan?: number;
-        moreThan?: number;
-        lessThanOrEqual?: number;
-        moreThanOrEqual?: number;
-        label?: string;
-    }[];
+        categories: {
+            lessThan?: number;
+            moreThan?: number;
+            lessThanOrEqual?: number;
+            moreThanOrEqual?: number;
+            label?: string;
+        }[];
+    };
+    average?: undefined;
 }
 
 export interface DaTreFoSelectionOptions {

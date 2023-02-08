@@ -17,5 +17,7 @@ Zeitverschiebung
         <option value="year">Jahre</option>
         <option value="month">Monate</option>
         <option value="week">Wochen</option>
+        <option value="day">Tage</option>
+        <option value="hour">Stunden</option>
     </Input>
 </FormControl>

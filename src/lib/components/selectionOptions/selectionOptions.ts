@@ -3,7 +3,9 @@ import { FhirFieldPrimitiveType } from '$lib/fhir/FhirFieldPrimitiveType.js';
 import type { AggregationParameters, MappingParameters } from '$lib/types/datrefoFormat/DaTreFoSelection';
 import { AggregationFunction, MappingFunction } from '$lib/types/datrefoFormat/DaTreFoSelection';
 import TimeShiftMappingFunctionComponent from '$lib/components/selectionOptions/TimeShiftMappingFunctionComponent.svelte';
-import CategoryAggregationFunction from '$lib/components/selectionOptions/CategoryAggregationFunction.svelte';
+import CategoryAggregationFunctionComponent from '$lib/components/selectionOptions/CategoryAggregationFunctionComponent.svelte';
+import DateRoundingMappingFunctionComponent from '$lib/components/selectionOptions/DateRoundingMappingFunctionComponent.svelte';
+import AverageAggregationFunctionComponent from '$lib/components/selectionOptions/AverageAggregationFunctionComponent.svelte';
 
 const numberTypes: FhirFieldPrimitiveType[] = [
     FhirFieldPrimitiveType.INTEGER,
@@ -31,13 +33,24 @@ export const aggregationFunctionInfo: Record<
     }
 > = {
     [AggregationFunction.CATEGORY]: {
-        isUsableOnField(field: FhirResourceField) {
+        isUsableOnField(field) {
             return numberTypes.includes(field.type as FhirFieldPrimitiveType);
         },
         createDefaultParameters(): AggregationParameters['category'] {
-            return [];
+            return {
+                categories: []
+            };
         },
-        component: CategoryAggregationFunction
+        component: CategoryAggregationFunctionComponent
+    },
+    [AggregationFunction.AVERAGE]: {
+        isUsableOnField(field) {
+            return numberTypes.includes(field.type as FhirFieldPrimitiveType);
+        },
+        createDefaultParameters(): AggregationParameters['average'] {
+            return undefined;
+        },
+        component: AverageAggregationFunctionComponent
     }
 };
 
@@ -66,8 +79,11 @@ export const mappingFunctionInfo: Record<
             return dateTypes.includes(field.type as FhirFieldPrimitiveType);
         },
         createDefaultParameters(): MappingParameters['dateRounding'] {
-            return undefined;
-        }
+            return {
+                timeUnit: 'month'
+            };
+        },
+        component: DateRoundingMappingFunctionComponent
     },
     [MappingFunction.CODE_ROUNDING]: {
         isUsableOnField(field: FhirResourceField) {
