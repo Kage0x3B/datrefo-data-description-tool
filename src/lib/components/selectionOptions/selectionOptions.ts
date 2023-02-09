@@ -1,4 +1,4 @@
-import type { FhirResourceField } from '$lib/fhir/FhirMetadata.js';
+import type { FhirFieldType, FhirResourceField } from '$lib/fhir/FhirMetadata.js';
 import { FhirFieldPrimitiveType } from '$lib/fhir/FhirFieldPrimitiveType.js';
 import type { AggregationParameters, MappingParameters } from '$lib/types/datrefoFormat/DaTreFoSelection';
 import { AggregationFunction, MappingFunction } from '$lib/types/datrefoFormat/DaTreFoSelection';
@@ -6,6 +6,8 @@ import TimeShiftMappingFunctionComponent from '$lib/components/selectionOptions/
 import CategoryAggregationFunctionComponent from '$lib/components/selectionOptions/CategoryAggregationFunctionComponent.svelte';
 import DateRoundingMappingFunctionComponent from '$lib/components/selectionOptions/DateRoundingMappingFunctionComponent.svelte';
 import AverageAggregationFunctionComponent from '$lib/components/selectionOptions/AverageAggregationFunctionComponent.svelte';
+import { FhirFieldObjectType } from '$lib/fhir/FhirFieldObjectType';
+import CodeRoundingMappingFunctionComponent from '$lib/components/selectionOptions/CodeRoundingMappingFunctionComponent.svelte';
 
 const numberTypes: FhirFieldPrimitiveType[] = [
     FhirFieldPrimitiveType.INTEGER,
@@ -21,6 +23,8 @@ const dateTimeTypes: FhirFieldPrimitiveType[] = [
     FhirFieldPrimitiveType.TIME,
     FhirFieldPrimitiveType.INSTANT
 ];
+
+const codeSystemTypes: FhirFieldType[] = [FhirFieldObjectType.CODEABLE_CONCEPT, FhirFieldObjectType.CODING];
 
 const dateTypes: FhirFieldPrimitiveType[] = [FhirFieldPrimitiveType.DATE, FhirFieldPrimitiveType.DATE_TIME, FhirFieldPrimitiveType.INSTANT];
 
@@ -87,13 +91,14 @@ export const mappingFunctionInfo: Record<
     },
     [MappingFunction.CODE_ROUNDING]: {
         isUsableOnField(field: FhirResourceField) {
-            return numberTypes.includes(field.type as FhirFieldPrimitiveType);
+            return codeSystemTypes.includes(field.type);
         },
         createDefaultParameters(): MappingParameters['codeRounding'] {
             return {
-                precision: 1
+                precision: 5
             };
-        }
+        },
+        component: CodeRoundingMappingFunctionComponent
     },
     [MappingFunction.AGE]: {
         isUsableOnField(field: FhirResourceField) {
