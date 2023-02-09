@@ -61,8 +61,20 @@ function exportDocument(document: InternalDocument, options: ExportOptions): DaT
 function generateSelections(document: InternalDocument, options: ExportOptions): DaTreFoRecursiveSelection {
     const selections = {};
 
-    for (const [fieldPath, selection] of Object.entries(document.selections)) {
-        setObjectPath(selections, fieldPath, selection);
+    if (options.selection === 'expandedObject') {
+        for (const [fieldPath, selection] of Object.entries(document.selections)) {
+            setObjectPath(selections, fieldPath, selection);
+        }
+    } else if (options.selection === 'fieldNameArray') {
+        // @ts-ignore
+        selections.selections = [];
+
+        for (const [fieldPath, selection] of Object.entries(document.selections)) {
+            if (selection) {
+                // @ts-ignore
+                selections.selections.push(fieldPath);
+            }
+        }
     }
 
     return selections;
