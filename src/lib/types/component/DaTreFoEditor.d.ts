@@ -26,5 +26,6 @@ export interface DaTreFoEditorContext {
     focusTab(tabId: string);
 
     closeTab(tabId: string): void;
-    showModal(type: ModalTypeNames, ...args: unknown[]);
+
+    showModal<T>(type: ModalTypeNames, ...args: unknown[]): Promise<T>;
 }

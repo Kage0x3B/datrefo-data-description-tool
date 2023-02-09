@@ -25,7 +25,7 @@
         {:else}
             <LogicalCondition {resourceType} bind:condition />
         {/if}
-        <Button color="error" class="" btnStyle="outline" on:click={() => removeCondition(condition)}>
+        <Button color="error" btnStyle="ghost" class="text-error" on:click={() => removeCondition(condition)}>
             <Icon icon={trashCanIcon} />
         </Button>
     </div>

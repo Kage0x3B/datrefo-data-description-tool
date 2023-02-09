@@ -9,32 +9,49 @@
     import ExcludeConditionsTab from '$lib/components/ExcludeConditionsTab.svelte';
     import { FhirResourceType } from '$lib/generated/FhirResourceType';
     import { EDITOR_CONTEXT } from '$lib/util/ContextKey';
-    import DocumentList from '$lib/components/documentList/DocumentList.svelte';
+    import DocumentList from '$lib/components/DocumentList.svelte';
     import MainMenu from '$lib/components/MainMenu.svelte';
-    import type { ModalType, ModalTypeNames, SelectionOptionsModalType } from '$lib/components/modal/ModalType';
+    import type {
+        ConfirmModalType,
+        ModalType,
+        ModalTypeNames,
+        PromptModalType,
+        SelectionOptionsModalType
+    } from '$lib/components/modal/ModalType';
     import CreateDocumentModal from '$lib/components/modal/CreateDocumentModal.svelte';
     import SelectionOptionsModal from '$lib/components/modal/SelectionOptionsModal.svelte';
     import ExportModal from '$lib/components/modal/ExportModal.svelte';
     import Icon from '@iconify/svelte';
     import angleRightIcon from '@iconify/icons-fa6-solid/angle-right';
+    import PromptModal from '$lib/components/modal/PromptModal.svelte';
+    import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
+    import { t } from 'svelte-i18n';
+    import { capitalCase } from 'change-case';
 
     let tabContainer: TabContainerType;
     let tabs: EditorTabData[] = [];
 
     let createDocumentModal: ModalType;
     let selectionOptionsModal: SelectionOptionsModalType;
+    let confirmModal: ConfirmModalType;
+    let promptModal: PromptModalType;
     let exportModal: ModalType;
 
     function createDocument(resourceType: FhirResourceType): InternalDocument {
-        let idCounter = 1;
-        let documentId = resourceType + idCounter++;
+        let idCounter = 0;
+        let documentId = resourceType + ++idCounter;
 
         while ($documents[documentId]) {
-            documentId = resourceType + idCounter++;
+            documentId = resourceType + ++idCounter;
         }
+
+        const resourceTypeName = $t(`fhir.resourceType.${resourceType}.name`, {
+            default: capitalCase(resourceType ?? '')
+        });
 
         const document: InternalDocument = {
             id: documentId,
+            displayName: resourceTypeName + ' ' + idCounter,
             resourceType,
             condition: [],
             selections: {}
@@ -83,11 +100,25 @@
         tabs = tabs.filter((tab) => tab.id !== tabId);
     }
 
-    function showModal(type: ModalTypeNames, ...args: unknown[]): void {
+    function ensureTabContentExists(documents: Record<string, InternalDocument>) {
+        for (const tab of tabs) {
+            if (tab.type === 'document' && !documents[tab.documentId]) {
+                closeTab(tabs);
+            }
+        }
+    }
+
+    $: ensureTabContentExists($documents);
+
+    function showModal<T>(type: ModalTypeNames, ...args: unknown[]): Promise<T> {
         if (type === 'createDocument') {
             createDocumentModal.open();
         } else if (type === 'selectionOptions') {
             selectionOptionsModal.open(...args);
+        } else if (type === 'confirm') {
+            return confirmModal.open(...args);
+        } else if (type === 'prompt') {
+            return promptModal.open(...args);
         } else if (type === 'export') {
             exportModal.open();
         } else {
@@ -136,6 +167,9 @@
         {/if}
     </main>
 </div>
+
 <CreateDocumentModal bind:this={createDocumentModal} />
 <SelectionOptionsModal bind:this={selectionOptionsModal} />
+<ConfirmModal bind:this={confirmModal} />
+<PromptModal bind:this={promptModal} />
 <ExportModal bind:this={exportModal} />

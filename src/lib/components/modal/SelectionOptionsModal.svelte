@@ -2,13 +2,14 @@
     import Modal from '$lib/daisyUiComponents/Modal.svelte';
     import Button from '$lib/daisyUiComponents/Button.svelte';
     import type { DaTreFoEditorContext } from '$lib/types/component/DaTreFoEditor';
-    import { getContext, onMount } from 'svelte';
+    import { getContext } from 'svelte';
     import { EDITOR_CONTEXT } from '$lib/util/ContextKey';
     import type { DaTreFoSelectionOptions } from '$lib/types/datrefoFormat/DaTreFoSelection';
     import { AggregationFunction, MappingFunction } from '$lib/types/datrefoFormat/DaTreFoSelection';
     import { documents } from '$lib/projectData';
     import type { FhirResourceField } from '$lib/fhir/FhirMetadata';
     import Input from '$lib/daisyUiComponents/Input.svelte';
+    import trashCanIcon from '@iconify/icons-fa6-solid/trash-can';
     import FormControl from '$lib/daisyUiComponents/FormControl.svelte';
     import {
         aggregationFunctionInfo,
@@ -19,7 +20,6 @@
     import { capitalCase } from 'change-case';
     import Icon from '@iconify/svelte';
     import plusIcon from '@iconify/icons-fa6-solid/plus';
-    import { FhirFieldPrimitiveType } from '$lib/fhir/FhirFieldPrimitiveType';
 
     const editor: DaTreFoEditorContext = getContext(EDITOR_CONTEXT);
 
@@ -114,6 +114,16 @@
         newMappingFunction = '';
     }
 
+    function removeAggregationFunction(func: AggregationFunction) {
+        selectionOptions!.aggregationFunction = selectionOptions!.aggregationFunction.filter((f) => f !== func);
+        delete selectionOptions!.aggregationParameters[func];
+    }
+
+    function removeMappingFunction(func: MappingFunction) {
+        selectionOptions!.mappingFunction = selectionOptions!.mappingFunction.filter((f) => f !== func);
+        delete selectionOptions!.mappingParameters[func];
+    }
+
     function moveMappingFunction(func: MappingFunction, direction: 'up' | 'down') {
         const fromIndex = selectionOptions!.mappingFunction.indexOf(func);
         const toIndex = fromIndex + (direction === 'up' ? -1 : +1);
@@ -132,19 +142,30 @@
             {#if selectionOptions.aggregationFunction.length}
                 <div class="border border-gray-300 rounded mb-2">
                     {#each selectionOptions.aggregationFunction as func, i}
-                        <div class="p-2 {i !== selectionOptions.aggregationFunction.length - 1 ? 'border-b' : ''}">
-                            {#if aggregationFunctionInfo[func].component}
-                                <svelte:component
-                                    this={aggregationFunctionInfo[func].component}
-                                    bind:parameters={selectionOptions.aggregationParameters[func]}
-                                    field={selectionField}
-                                />
-                            {:else}
-                                <span
-                                    >{capitalCase(func)}
-                                    <span class="text-base-content/80"> (keine weiteren Einstellungsmöglichkeiten)</span></span
-                                >
-                            {/if}
+                        <div class="p-2 flex flex-row {i !== selectionOptions.aggregationFunction.length - 1 ? 'border-b' : ''}">
+                            <div class="flex-1">
+                                {#if aggregationFunctionInfo[func].component}
+                                    <svelte:component
+                                        this={aggregationFunctionInfo[func].component}
+                                        bind:parameters={selectionOptions.aggregationParameters[func]}
+                                        field={selectionField}
+                                    />
+                                {:else}
+                                    <span>
+                                        {capitalCase(func)}
+                                        <span class="text-base-content/80"> (keine weiteren Einstellungsmöglichkeiten)</span>
+                                    </span>
+                                {/if}
+                            </div>
+                            <Button
+                                color="error"
+                                btnStyle="ghost"
+                                class="ml-2 text-error"
+                                size="sm"
+                                on:click={() => removeAggregationFunction(func)}
+                            >
+                                <Icon icon={trashCanIcon} />
+                            </Button>
                         </div>
                     {/each}
                 </div>
@@ -175,19 +196,30 @@
             {#if selectionOptions.mappingFunction.length}
                 <div class="border border-gray-300 rounded mb-2">
                     {#each selectionOptions.mappingFunction as func, i}
-                        <div class="p-2 {i !== selectionOptions.mappingFunction.length - 1 ? 'border-b' : ''}">
-                            {#if mappingFunctionInfo[func].component}
-                                <svelte:component
-                                    this={mappingFunctionInfo[func].component}
-                                    bind:parameters={selectionOptions.mappingParameters[func]}
-                                    field={selectionField}
-                                />
-                            {:else}
-                                <span
-                                    >{capitalCase(func)}
-                                    <span class="text-base-content/80"> (keine weiteren Einstellungsmöglichkeiten)</span></span
-                                >
-                            {/if}
+                        <div class="p-2 flex flex-row {i !== selectionOptions.mappingFunction.length - 1 ? 'border-b' : ''}">
+                            <div class="flex-1">
+                                {#if mappingFunctionInfo[func].component}
+                                    <svelte:component
+                                        this={mappingFunctionInfo[func].component}
+                                        bind:parameters={selectionOptions.mappingParameters[func]}
+                                        field={selectionField}
+                                    />
+                                {:else}
+                                    <span>
+                                        {capitalCase(func)}
+                                        <span class="text-base-content/80"> (keine weiteren Einstellungsmöglichkeiten)</span>
+                                    </span>
+                                {/if}
+                            </div>
+                            <Button
+                                color="error"
+                                btnStyle="ghost"
+                                class="ml-2 text-error"
+                                size="sm"
+                                on:click={() => removeMappingFunction(func)}
+                            >
+                                <Icon icon={trashCanIcon} />
+                            </Button>
                         </div>
                     {/each}
                 </div>
