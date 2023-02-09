@@ -13,41 +13,43 @@
     export let parameters: NonNullable<AggregationParameters['category']>;
     export let hasError = false;
 
-    $: if (!parameters) {
-        parameters = [];
+    $: if (!parameters.categories) {
+        parameters.categories = [];
     }
 
     $: inputDecimal = isFieldTypeDecimal(field);
     $: inputPositive = isFieldTypeOnlyPositive(field);
     let errorTranslation: [string, Record<string, unknown>] | undefined = undefined;
-    $: errorTranslation = checkCategories(parameters);
+    $: errorTranslation = checkCategories(parameters.categories);
     $: hasError = !!errorTranslation;
 
     function addRow(): void {
-        if (!parameters.length) {
-            parameters = [
+        if (!parameters.categories.length) {
+            parameters.categories = [
                 {
                     label: '',
                     lessThan: 1
                 }
             ];
         } else {
-            parameters = [
-                ...parameters,
+            parameters.categories = [
+                ...parameters.categories,
                 {
                     label: '',
-                    moreThanOrEqual: parameters[parameters.length - 1].lessThan,
-                    lessThan: parameters[parameters.length - 1].lessThan + 1
+                    moreThanOrEqual: parameters.categories[parameters.categories.length - 1].lessThan,
+                    lessThan: parameters.categories[parameters.categories.length - 1].lessThan + 1
                 }
             ];
         }
     }
 
     function removeRow(row: unknown): void {
-        parameters = parameters.filter((p) => p !== row);
+        parameters.categories = parameters.categories.filter((p) => p !== row);
     }
 
-    function checkCategories(categories: NonNullable<AggregationParameters['category']>): [string, Record<string, unknown>] | undefined {
+    function checkCategories(
+        categories: NonNullable<AggregationParameters['category']['categories']>
+    ): [string, Record<string, unknown>] | undefined {
         if (!categories.length) {
             return ['noCategories', {}];
         }
@@ -91,7 +93,7 @@
         </tr>
     </thead>
     <tbody>
-        {#each parameters as range}
+        {#each parameters.categories as range}
             <tr>
                 <td>
                     <Input type="text" bind:value={range.label} inputStyle="bordered" class="w-11/12" />
