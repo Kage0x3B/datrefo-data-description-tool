@@ -1,4 +1,5 @@
 import type { FhirResourceField } from '$lib/fhir/FhirMetadata';
+import { AutocompleteType } from '$lib/components/autocomplete/AutocompleteType';
 
 export interface ModalType {
     open(): void;
@@ -16,6 +17,10 @@ export interface PromptModalType extends ModalType {
 
 export interface SelectionOptionsModalType extends ModalType {
     open(documentId: string, selectionFieldPath: string, selectionField: FhirResourceField);
+}
+
+export interface CodeAutocompleteModalType extends ModalType {
+    open(autocompleteType: AutocompleteType, initialValue: string);
 }
 
 type ModalTypeNames = 'confirm' | 'prompt' | 'createDocument' | 'selectionOptions' | 'export';

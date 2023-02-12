@@ -29,6 +29,11 @@
         "loinc": "Loinc",
         "verificationStatus": "Verification Status"
     },
+    "autocomplete": {
+        "type": {
+            "icd10Gm": "ICD-10-GM"
+        }
+    },
     "condition": {
         "operator": {
             "eq": {

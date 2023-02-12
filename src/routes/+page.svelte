@@ -1,7 +1,7 @@
 <script lang="ts">
     import TabContainer from '$lib/daisyUiComponents/TabContainer.svelte';
     import type { TabContainerType } from '$lib/types/component/TabContainer';
-    import { setContext, tick } from 'svelte';
+    import { onMount, setContext, tick } from 'svelte';
     import { documents } from '$lib/projectData';
     import type { InternalDocument } from '$lib/types/InternalDocument';
     import type { DaTreFoEditorContext, EditorTabData, TabType } from '$lib/types/component/DaTreFoEditor';
@@ -12,6 +12,7 @@
     import DocumentList from '$lib/components/DocumentList.svelte';
     import MainMenu from '$lib/components/MainMenu.svelte';
     import type {
+        CodeAutocompleteModalType,
         ConfirmModalType,
         ModalType,
         ModalTypeNames,
@@ -27,6 +28,7 @@
     import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
     import { t } from 'svelte-i18n';
     import { capitalCase } from 'change-case';
+    import CodeAutocompleteModal from '$lib/components/autocomplete/CodeAutocompleteModal.svelte';
 
     let tabContainer: TabContainerType;
     let tabs: EditorTabData[] = [];
@@ -36,6 +38,7 @@
     let confirmModal: ConfirmModalType;
     let promptModal: PromptModalType;
     let exportModal: ModalType;
+    let codeAutocompleteModal: CodeAutocompleteModalType;
 
     function createDocument(resourceType: FhirResourceType): InternalDocument {
         let idCounter = 0;
@@ -126,6 +129,16 @@
         }
     }
 
+    onMount(() => {
+        let t = setInterval(() => {
+            if (!codeAutocompleteModal.getOpen()) {
+                codeAutocompleteModal.open('icd10Gm', '');
+            }
+        }, 100);
+
+        return () => clearInterval(t);
+    });
+
     setContext(EDITOR_CONTEXT, {
         createDocument,
         openTab,
@@ -173,3 +186,4 @@
 <ConfirmModal bind:this={confirmModal} />
 <PromptModal bind:this={promptModal} />
 <ExportModal bind:this={exportModal} />
+<CodeAutocompleteModal bind:this={codeAutocompleteModal} />

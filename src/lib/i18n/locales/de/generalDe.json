@@ -21,11 +21,16 @@
         }
     },
     "codeSystem": {
-        "icd10": "ICD-10",
+        "icd10Gm": "ICD-10-GM",
         "acme": "ACME Lab Ergebnis Code",
         "snomed": "SNOMED CT",
         "loinc": "Loinc",
         "verificationStatus": "Überprüfungsstatus"
+    },
+    "autocomplete": {
+        "type": {
+            "icd10Gm": "ICD-10-GM"
+        }
     },
     "condition": {
         "operator": {

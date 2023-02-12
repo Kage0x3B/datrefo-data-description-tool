@@ -2,9 +2,9 @@ import Fuse from 'fuse.js';
 import { AutocompleteType, autocompleteTypeOptions } from '$lib/components/autocomplete/AutocompleteType';
 
 export class AutocompleteCache {
-    private fuseCache = new Map<AutocompleteType, Fuse<unknown>>();
+    private static fuseCache = new Map<AutocompleteType, Fuse<unknown>>();
 
-    public async loadAutocomplete<T>(type: AutocompleteType): Promise<Fuse<T>> {
+    public static async loadAutocomplete<T>(type: AutocompleteType): Promise<Fuse<T>> {
         if (this.fuseCache.has(type)) {
             return this.fuseCache.get(type) as Fuse<T>;
         }
