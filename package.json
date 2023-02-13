@@ -12,7 +12,7 @@
         "test:unit": "vitest",
         "lint": "prettier --plugin-search-dir . --check . && eslint .",
         "format": "prettier --plugin-search-dir . --write .",
-        "generateMetadata": "mkdir -p ./src/lib/generated && npm run generateFhirMetadata && npm run generateFhirLocaleData",
+        "generateMetadata": "mkdir -p ./src/lib/generated && npm run generateFhirMetadata && npm run generateFhirLocaleData && npm run generateIcd10GmSearchData",
         "generateFhirMetadata": "ts-node-esm -P tsconfig-tools.json tools/generateFhirResourceTypes.ts && ts-node-esm -P tsconfig-tools.json tools/generateFhirMetadata.ts",
         "generateFhirLocaleData": "mkdir -p ./src/lib/generated/i18n/fhir && ts-node-esm -P tsconfig-tools.json tools/generateFhirLocaleData.ts",
         "generateIcd10GmSearchData": "mkdir -p ./src/lib/generated/autocomplete && ts-node-esm -P tsconfig-tools.json tools/generateIcd10GmSearchData.ts"
