@@ -33,8 +33,6 @@
         icd10: AutocompleteType.ICD_10_GM
     };
 
-    $: supportsAutocomplete = !!autocompleteCodeSystemMap[system];
-
     function initValues(conditions: DaTreFoOperatorCondition[]) {
         system = reversedCodeSystems[conditions.find((c) => c.leftOperand === 'system').rightOperand] ?? 'snomed';
         code = conditions.find((c) => c.leftOperand === 'code').rightOperand ?? '';
@@ -67,6 +65,7 @@
 
     $: initValues(condition.conditions);
     $: onChange(system, code);
+    $: supportsAutocomplete = !!autocompleteCodeSystemMap[system];
 </script>
 
 <div class="flex flex-row">
