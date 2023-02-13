@@ -12,6 +12,7 @@
 
     export let resourceType: FhirResourceType;
     export let conditionList: (DaTreFoCondition | InternalCombinedCondition)[];
+    export let leftOperandEditable = false;
 
     function removeCondition(condition: DaTreFoCondition): void {
         conditionList = conditionList.filter((c) => c !== condition);
@@ -21,9 +22,9 @@
 {#each conditionList as condition}
     <div class="flex flex-row justify-between items-center mb-4">
         {#if hasOwnProperty(condition, 'leftOperand') || isCombinedCondition(condition)}
-            <Condition {resourceType} bind:condition />
+            <Condition {resourceType} bind:condition {leftOperandEditable} />
         {:else}
-            <LogicalCondition {resourceType} bind:condition />
+            <LogicalCondition {resourceType} bind:condition {leftOperandEditable} />
         {/if}
         <Button color="error" btnStyle="ghost" class="text-error" on:click={() => removeCondition(condition)}>
             <Icon icon={trashCanIcon} />

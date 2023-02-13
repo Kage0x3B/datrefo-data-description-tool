@@ -16,15 +16,16 @@
                 <li>
                     <a class="px-2 py-2" on:click={() => editor.showModal('createDocument')}>Neue Resource Datei...</a>
                 </li>
+                <li>
+                    <a class="px-2 py-2" on:click={() => editor.openTab('excludePatientConditions')}>Ausschlusskriterien bearbeiten</a>
+                </li>
                 <li class="menu-title mt-2">
                     <span class="pl-2 !text-neutral-content/60 uppercase">Projekt</span>
                 </li>
                 <li><a class="px-2 py-2 pointer-events-none text-neutral-content/80">Neues Projekt...</a></li>
                 <li><a class="px-2 py-2 pointer-events-none text-neutral-content/80">Speichern</a></li>
                 <li>
-                    <a class="px-2 py-2" on:click={() => editor.showModal('export')}
-                        >DaTreFo Forschungsdaten Beschreibung exportieren...</a
-                    >
+                    <a class="px-2 py-2" on:click={() => editor.showModal('export')}>DaTreFo Forschungsdaten Beschreibung exportieren...</a>
                 </li>
             </ul>
         </div>

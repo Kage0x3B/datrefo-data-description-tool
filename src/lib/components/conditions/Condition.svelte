@@ -13,6 +13,7 @@
 
     export let resourceType: FhirResourceType;
     export let condition: DaTreFoOperatorCondition | InternalCombinedCondition;
+    export let leftOperandEditable = false;
 
     let fhirMetadata: FhirResourceMetadata;
     $: fhirMetadata = fhirResourceTypeMetadata[resourceType];
@@ -32,8 +33,9 @@
         <Input
             type="text"
             bind:value={condition.leftOperand}
-            class="bg-gray-100 dark:bg-base-200 dark:text-base-content cursor-not-allowed mr-2"
-            readonly
+            class="{leftOperandEditable ? '' : 'bg-gray-100 dark:bg-base-200 dark:text-base-content cursor-not-allowed'} mr-2"
+            readonly={!leftOperandEditable}
+            placeholder={leftOperandEditable ? 'Fhir-Pfad eingeben...' : ''}
         />
         <Input type="select" inputSize="sm" inputStyle="bordered" bind:value={condition.operator} class="mr-2 dark:text-base-content">
             {#each displayedOperators as operatorType}
@@ -55,7 +57,7 @@
                 <Input type="text" bind:value={condition.rightOperand} class="dark:text-base-content" />
             {/if}
         {:else}
-            <Input type="text" value="Invalider linker Operand" class="dark:text-base-content" />
+            <Input type="text" value="Invalider linker Operand" disabled class="dark:text-base-content" />
         {/if}
     </div>
 {/if}

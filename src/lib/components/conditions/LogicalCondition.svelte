@@ -6,11 +6,12 @@
 
     export let resourceType: FhirResourceType;
     export let condition: DaTreFoLogicalCondition;
+    export let leftOperandEditable = false;
 </script>
 
 <div class="flex flex-col">
     {#each condition.operand as operand, i}
-        <Condition {resourceType} bind:condition={operand} />
+        <Condition {resourceType} bind:condition={operand} {leftOperandEditable} />
         <div class="w-full flex flex-row justify-center">
             {#if i !== condition.operand.length - 1}
                 {capitalCase(condition.operator)}

@@ -29,11 +29,13 @@
     import { t } from 'svelte-i18n';
     import { capitalCase } from 'change-case';
     import CodeAutocompleteModal from '$lib/components/autocomplete/CodeAutocompleteModal.svelte';
+    import CreateExcludeConditionModal from '$lib/components/modal/CreateExcludeConditionModal.svelte';
 
     let tabContainer: TabContainerType;
     let tabs: EditorTabData[] = [];
 
     let createDocumentModal: ModalType;
+    let createExcludeConditionModal: ModalType;
     let selectionOptionsModal: SelectionOptionsModalType;
     let confirmModal: ConfirmModalType;
     let promptModal: PromptModalType;
@@ -116,6 +118,8 @@
     function showModal<T>(type: ModalTypeNames, ...args: unknown[]): Promise<T> {
         if (type === 'createDocument') {
             createDocumentModal.open();
+        } else if (type === 'createExcludeCondition') {
+            createExcludeConditionModal.open();
         } else if (type === 'selectionOptions') {
             selectionOptionsModal.open(...args);
         } else if (type === 'confirm') {
@@ -132,7 +136,7 @@
     onMount(() => {
         let t = setInterval(() => {
             if (!codeAutocompleteModal.getOpen()) {
-                codeAutocompleteModal.open('icd10Gm', '');
+                //codeAutocompleteModal.open('icd10Gm', '');
             }
         }, 100);
 
@@ -164,7 +168,7 @@
                     {#if tab.type === 'document'}
                         <DocumentTab tabData={tab} />
                     {:else if tab.type === 'excludePatientConditions'}
-                        <ExcludeConditionsTab />
+                        <ExcludeConditionsTab tabData={tab} />
                     {/if}
                 {/each}
             </TabContainer>
@@ -182,6 +186,7 @@
 </div>
 
 <CreateDocumentModal bind:this={createDocumentModal} />
+<CreateExcludeConditionModal bind:this={createExcludeConditionModal} />
 <SelectionOptionsModal bind:this={selectionOptionsModal} />
 <ConfirmModal bind:this={confirmModal} />
 <PromptModal bind:this={promptModal} />

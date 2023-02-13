@@ -1,10 +1,12 @@
-import { documents as documentsStore } from '$lib/projectData';
+import { documents as documentsStore, excludePatientConditions as excludePatientConditionsStore } from '$lib/projectData';
 import { get } from 'svelte/store';
-import type { InternalDocument } from '$lib/types/InternalDocument';
+import type { InternalCondition, InternalDocument } from '$lib/types/InternalDocument';
 import type { DaTreFoDocument, DaTreFoRecursiveSelection } from '$lib/types/datrefoFormat/DaTreFoDocument';
 import JSZip from 'jszip';
 import type { DaTreFoCondition } from '$lib/types/datrefoFormat/DaTreFoCondition';
 import { isCombinedCondition } from '$lib/components/conditions/conditionUtil';
+import type { FhirResourceType } from '$lib/generated/FhirResourceType';
+import { pascalCase } from 'change-case';
 
 export interface ExportOptions {
     documentContainer: 'json' | 'zip';
@@ -15,11 +17,18 @@ export interface ExportOptions {
 
 export async function exportProject(options: ExportOptions): Promise<{ data: Blob; fileName: string }> {
     const documents = get(documentsStore);
-    const exportedDocuments: Record<string, DaTreFoDocument> = {};
+    const excludePatientConditions = get(excludePatientConditionsStore);
+    let exportedDocuments: Record<string, DaTreFoDocument> = {};
 
     for (const [documentId, document] of Object.entries(documents)) {
         exportedDocuments[documentId] = exportDocument(document, options);
     }
+
+    const exportedExcludeConditionDocuments = exportExcludePatientConditionDocuments(excludePatientConditions, options);
+    exportedDocuments = {
+        ...exportedDocuments,
+        ...exportedExcludeConditionDocuments
+    };
 
     if (options.documentContainer === 'zip') {
         return {
@@ -52,10 +61,29 @@ function exportDocument(document: InternalDocument, options: ExportOptions): DaT
 
     return {
         resourceType: document.resourceType,
-        condition: generateConditions(document, options),
-        excludePatientCondition: [],
+        condition: generateConditions(document.condition, options),
         ...selections
     };
+}
+
+function exportExcludePatientConditionDocuments(
+    excludePatientConditions: Record<FhirResourceType, InternalCondition[]>,
+    options: ExportOptions
+): Record<string, DaTreFoDocument> {
+    const exportedDocuments: Record<string, DaTreFoDocument> = {};
+
+    for (const [resourceType, conditionList] of Object.entries(excludePatientConditions) as [FhirResourceType, InternalCondition[]][]) {
+        if (!conditionList?.length) {
+            continue;
+        }
+
+        exportedDocuments['excludePatientConditions' + pascalCase(resourceType)] = {
+            resourceType,
+            excludePatientCondition: generateConditions(conditionList, options)
+        };
+    }
+
+    return exportedDocuments;
 }
 
 function generateSelections(document: InternalDocument, options: ExportOptions): DaTreFoRecursiveSelection {
@@ -80,10 +108,10 @@ function generateSelections(document: InternalDocument, options: ExportOptions):
     return selections;
 }
 
-function generateConditions(document: InternalDocument, options: ExportOptions): DaTreFoCondition[] {
+function generateConditions(conditionList: InternalCondition[], options: ExportOptions): DaTreFoCondition[] {
     const exportConditions: DaTreFoCondition[] = [];
 
-    for (const condition of document.condition) {
+    for (const condition of conditionList) {
         if (isCombinedCondition(condition)) {
             for (const subCondition of condition.conditions) {
                 exportConditions.push({

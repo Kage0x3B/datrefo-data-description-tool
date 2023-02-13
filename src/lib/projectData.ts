@@ -1,7 +1,7 @@
-import type { InternalDocument } from '$lib/types/InternalDocument';
+import type { InternalCondition, InternalDocument } from '$lib/types/InternalDocument';
 import type { Writable } from 'svelte/store';
 import { writable } from 'svelte/store';
-import type { DaTreFoCondition } from '$lib/types/datrefoFormat/DaTreFoCondition';
+import type { FhirResourceType } from '$lib/generated/FhirResourceType';
 
 // TODO: Remove temp data
 export const documents: Writable<Record<string, InternalDocument>> = writable({
@@ -24,4 +24,7 @@ export const documents: Writable<Record<string, InternalDocument>> = writable({
 		selections: {}
 	}*/
 });
-export const excludePatientConditions: Writable<DaTreFoCondition[]> = writable([]);
+
+export const excludePatientConditions: Writable<Record<FhirResourceType, InternalCondition[]>> = writable(
+    {} as Record<FhirResourceType, InternalCondition[]>
+);
