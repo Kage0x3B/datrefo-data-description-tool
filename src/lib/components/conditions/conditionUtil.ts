@@ -95,7 +95,7 @@ export function createCondition(field: FhirResourceField, fieldPath: string): In
     if (isFieldTypeCombinedCondition(field)) {
         const subConditions: DaTreFoOperatorCondition[] = [];
 
-        if (field.type === FhirFieldObjectType.CODEABLE_CONCEPT) {
+        if (field.type === FhirFieldObjectType.CODEABLE_CONCEPT || field.type === FhirFieldObjectType.CODING) {
             subConditions.push(
                 {
                     leftOperand: 'system',

@@ -1,7 +1,7 @@
 <script lang="ts">
     import TabContainer from '$lib/daisyUiComponents/TabContainer.svelte';
     import type { TabContainerType } from '$lib/types/component/TabContainer';
-    import { onMount, setContext, tick } from 'svelte';
+    import { setContext, tick } from 'svelte';
     import { documents } from '$lib/projectData';
     import type { InternalDocument } from '$lib/types/InternalDocument';
     import type { DaTreFoEditorContext, EditorTabData, TabType } from '$lib/types/component/DaTreFoEditor';
@@ -128,20 +128,12 @@
             return promptModal.open(...args);
         } else if (type === 'export') {
             exportModal.open();
+        } else if (type === 'codeAutocomplete') {
+            return codeAutocompleteModal.open(...args);
         } else {
             console.warn(`Invalid modal type ${type}`);
         }
     }
-
-    onMount(() => {
-        let t = setInterval(() => {
-            if (!codeAutocompleteModal.getOpen()) {
-                //codeAutocompleteModal.open('icd10Gm', '');
-            }
-        }, 100);
-
-        return () => clearInterval(t);
-    });
 
     setContext(EDITOR_CONTEXT, {
         createDocument,

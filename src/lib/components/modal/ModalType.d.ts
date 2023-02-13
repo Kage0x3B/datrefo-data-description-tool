@@ -23,4 +23,11 @@ export interface CodeAutocompleteModalType extends ModalType {
     open(autocompleteType: AutocompleteType, initialValue: string);
 }
 
-type ModalTypeNames = 'confirm' | 'prompt' | 'createDocument' | 'createExcludeCondition' | 'selectionOptions' | 'export';
+type ModalTypeNames =
+    | 'confirm'
+    | 'prompt'
+    | 'createDocument'
+    | 'createExcludeCondition'
+    | 'selectionOptions'
+    | 'export'
+    | 'codeAutocomplete';

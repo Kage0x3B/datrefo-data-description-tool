@@ -32,7 +32,7 @@
         return isOpen;
     }
 
-    export function open(_autocompleteType: AutocompleteType | undefined, _initialValue: string): Promise<string> {
+    export function open(_autocompleteType: AutocompleteType | undefined, _initialValue: string): Promise<string | undefined> {
         searchResults = [];
         autocompleteType = _autocompleteType;
         searchQuery = _initialValue;
@@ -44,6 +44,8 @@
     }
 
     export function close() {
+        callback(undefined);
+
         isOpen = false;
     }
 

@@ -27,6 +27,8 @@
     }
 
     export function close() {
+        callback(false);
+
         isOpen = false;
     }
 

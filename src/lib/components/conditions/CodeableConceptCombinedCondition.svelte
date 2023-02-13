@@ -4,12 +4,18 @@
     import { t } from 'svelte-i18n';
     import FormControl from '$lib/daisyUiComponents/FormControl.svelte';
     import type { DaTreFoOperatorCondition } from '$lib/types/datrefoFormat/DaTreFoCondition';
+    import { AutocompleteType } from '$lib/components/autocomplete/AutocompleteType';
+    import type { DaTreFoEditorContext } from '$lib/types/component/DaTreFoEditor';
+    import { getContext } from 'svelte';
+    import { EDITOR_CONTEXT } from '$lib/util/ContextKey';
+
+    const editor: DaTreFoEditorContext = getContext(EDITOR_CONTEXT);
 
     type CodeSystem = 'icd10' | 'acme' | 'snomed' | 'loinc' | 'verificationStatus';
     export let condition: InternalCombinedCondition;
     $: basePath = condition.basePath;
 
-    let system: CodeSystem = 'icd10';
+    let system: CodeSystem = '';
     let code = '';
 
     const codeSystemUri: Record<CodeSystem, string> = {
@@ -22,6 +28,12 @@
     const reversedCodeSystems: Record<string, CodeSystem> = Object.fromEntries(
         Object.entries(codeSystemUri).map(([key, value]) => [value, key])
     ) as Record<string, CodeSystem>;
+
+    const autocompleteCodeSystemMap: Partial<Record<CodeSystem, AutocompleteType>> = {
+        icd10: AutocompleteType.ICD_10_GM
+    };
+
+    $: supportsAutocomplete = !!autocompleteCodeSystemMap[system];
 
     function initValues(conditions: DaTreFoOperatorCondition[]) {
         system = reversedCodeSystems[conditions.find((c) => c.leftOperand === 'system').rightOperand] ?? 'snomed';
@@ -43,6 +55,16 @@
         ];
     }
 
+    async function onFocusInput() {
+        if (supportsAutocomplete) {
+            const newCode = await editor.showModal('codeAutocomplete', autocompleteCodeSystemMap[system], code);
+
+            if (newCode) {
+                code = newCode;
+            }
+        }
+    }
+
     $: initValues(condition.conditions);
     $: onChange(system, code);
 </script>
@@ -61,7 +83,14 @@
                     <option value={codeSystemType}>{$t(`codeSystem.${codeSystemType}`)}</option>
                 {/each}
             </Input>
-            <Input type="text" bind:value={code} inputStyle="bordered" class="dark:text-base-content" />
+            <Input
+                type="text"
+                bind:value={code}
+                readonly={supportsAutocomplete}
+                on:focus={onFocusInput}
+                inputStyle="bordered"
+                class="dark:text-base-content"
+            />
         </div>
     </FormControl>
 </div>
