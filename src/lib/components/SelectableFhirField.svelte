@@ -12,7 +12,7 @@
     import { convertI18nFhirDefinitionPath, convertI18nFhirFieldPath } from '$lib/fhir/fhirI18nUtil.js';
     import { FhirResourceType } from '$lib/generated/FhirResourceType';
     import { documents } from '$lib/projectData';
-    import type { DaTreFoSelection } from '$lib/types/datrefoFormat/DaTreFoSelection';
+    import type { DaTreFoSelection, DaTreFoSelectionOptions } from '$lib/types/datrefoFormat/DaTreFoSelection';
     import Icon from '@iconify/svelte';
     import circleQuestionIcon from '@iconify/icons-fa6-solid/circle-question';
     import Button from '$lib/daisyUiComponents/Button.svelte';
@@ -44,7 +44,7 @@
 
     let selection: DaTreFoSelection;
     $: selection = $documents[documentId].selections[fieldPath];
-    $: indirectlySelected = Object.keys($documents[documentId].selections).some((path) => fieldPath.startsWith(path) && fieldPath !== path);
+    $: indirectlySelected = isIndirectlySelected(fieldPath, $documents[documentId].selections);
     $: isSelected = !!selection || indirectlySelected;
 
     let expanded = false;
@@ -55,6 +55,15 @@
     }
     $: showPseudonomyzationButton = isAnyPseudonymizationFunctionAvailable(field);
     $: showConditionButton = field.type !== 'definition';
+
+    function isIndirectlySelected(fieldPath: string, selections: Record<string, boolean | DaTreFoSelectionOptions>): boolean {
+        return Object.keys(selections).some((path) => {
+            const fieldPathNestedLevel = (fieldPath.match(/\./g) || []).length;
+            const selectionPathNestedLevel = (path.match(/\./g) || []).length;
+
+            return fieldPath !== path && fieldPath.startsWith(path) && fieldPathNestedLevel > selectionPathNestedLevel;
+        });
+    }
 
     function getTranslationProperty(
         property: 'name' | 'description',
