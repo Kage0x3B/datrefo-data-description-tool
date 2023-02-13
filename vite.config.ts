@@ -13,6 +13,9 @@ const config: UserConfig = {
         port: 10001,
         strictPort: true
     },
+    build: {
+        minify: true
+    },
     test: {
         include: ['src/**/*.{test,spec}.{js,ts}']
     }
